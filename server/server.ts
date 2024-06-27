@@ -12,6 +12,7 @@ dotenv.config();
 import { catch404, errorHandler } from "./middleware/errorMiddleware";
 
 // Import Routes
+import authRoute from "./routes/authRoute";
 import postRoute from "./routes/postRoute";
 import userRoute from "./routes/userRoute";
 
@@ -44,8 +45,9 @@ app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/account", userRoute);
-app.use("/", postRoute);
+app.use("/account", authRoute);
+app.use("/user", userRoute);
+app.use("/post", postRoute);
 
 // Error Middleware
 app.use(catch404);

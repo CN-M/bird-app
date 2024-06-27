@@ -4,7 +4,7 @@ import { Display } from "../components/display";
 
 import { Todo } from "../types";
 
-export const Dashboard = () => {
+export const Main = () => {
   const [task, setTask] = useState("");
   const [todos, setTodos] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);

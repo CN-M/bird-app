@@ -79,7 +79,7 @@ Auth
     - Specific User page
         Tabs:
             - Posts by Specific user
-            - Liked Posts by Specific user (nice to have)
+            - // Liked Posts by Specific user (nice to have)
 
 # Backend
 Endpoints:
@@ -106,6 +106,6 @@ Comments:
     - Read comment
     - Comment on comment
     - Delete comment
-    - update on comment
+    - update on comment (premium)
     - Like comment
 

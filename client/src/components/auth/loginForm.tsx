@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../lib/authStore";
+import { useAuthStore } from "../../lib/authStore";
 
 export const LoginForm = () => {
   const navigate = useNavigate();

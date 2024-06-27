@@ -1,15 +1,8 @@
 import { Request, Response } from "express";
 import { prisma } from "../config/db";
 
-export const getGeneralFeedPosts = async (req: Request, res: Response) => {
-  // const { user } = req;
-
-  // if (!user) {
-  //   return res
-  //     .status(400)
-  //     .json({ error: "Not authoriized, please login or register" });
-  // }
-
+// Do not need to be authed to see these
+export const getGeneralFeed = async (req: Request, res: Response) => {
   try {
     const posts = await prisma.post.findMany({ take: 10 });
 
@@ -20,32 +13,8 @@ export const getGeneralFeedPosts = async (req: Request, res: Response) => {
   }
 };
 
-export const getUserPosts = async (req: Request, res: Response) => {
-  const { user } = req;
-  const { id } = req.params;
-
-  if (!user) {
-    return res
-      .status(400)
-      .json({ error: "Not authoriized, please login or register" });
-  }
-
-  // const { id } = user;
-
-  try {
-    const posts = await prisma.post.findMany({
-      where: { authorId: id },
-      take: 10,
-    });
-
-    res.status(200).json(posts);
-  } catch (err) {
-    console.error("Error fetching posts:", err);
-    res.status(500).json({ error: "Internal server error." });
-  }
-};
-
-export const getUserFeedPosts = async (req: Request, res: Response) => {
+// Get feed posts of people user is following
+export const getFollowingFeed = async (req: Request, res: Response) => {
   const { user } = req;
 
   if (!user) {
@@ -59,6 +28,30 @@ export const getUserFeedPosts = async (req: Request, res: Response) => {
   try {
     const posts = await prisma.post.findMany({
       where: { authorId: id },
+    });
+
+    res.status(200).json(posts);
+  } catch (err) {
+    console.error("Error fetching posts:", err);
+    res.status(500).json({ error: "Internal server error." });
+  }
+};
+
+// Get feed of posts by 1 user
+export const getSingleUserFeed = async (req: Request, res: Response) => {
+  const { user } = req;
+  const { id } = req.params;
+
+  if (!user) {
+    return res
+      .status(400)
+      .json({ error: "Not authoriized, please login or register" });
+  }
+
+  try {
+    const posts = await prisma.post.findMany({
+      where: { authorId: id },
+      take: 10,
     });
 
     res.status(200).json(posts);
@@ -169,3 +162,7 @@ export const deletePost = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error." });
   }
 };
+
+export const likePost = async (req: Request, res: Response) => {};
+
+export const unlikePost = async (req: Request, res: Response) => {};

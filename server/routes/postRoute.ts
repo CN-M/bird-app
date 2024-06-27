@@ -5,20 +5,20 @@ const router = express.Router();
 import {
   createPost,
   deletePost,
-  getGeneralFeedPosts,
-  getUserFeedPosts,
-  getUserPosts,
+  getFollowingFeed,
+  getGeneralFeed,
+  getSingleUserFeed,
   updatePost,
 } from "../controllers/postController";
 import { protect } from "../middleware/authMiddleware";
 
-router.route("/").get(getGeneralFeedPosts).post(protect, createPost);
+router.route("/").get(getGeneralFeed).post(protect, createPost);
 
-router.route("/feed").get(protect, getUserFeedPosts);
+router.route("/feed").get(protect, getFollowingFeed);
 
 router
   .route("/:id")
-  .get(protect, getUserPosts)
+  .get(protect, getSingleUserFeed)
   .put(protect, updatePost)
   .delete(protect, deletePost);
 
