@@ -12,14 +12,14 @@ require("dotenv").config();
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
-    const { email, firstName, lastName, password } = req.body;
+    const { email, username, profileName, password } = req.body;
 
-    if (!email || !firstName || !lastName || !password) {
+    if (!email || !profileName || !username || !password) {
       return res.status(400).json({ error: "Please fill in all fields" });
     }
 
     const userExists = await prisma.user.findFirst({
-      where: { email },
+      where: { username },
     });
 
     if (userExists) {
@@ -30,28 +30,33 @@ export const registerUser = async (req: Request, res: Response) => {
 
     const newUser = await prisma.user.create({
       data: {
-        firstName,
-        lastName,
+        profileName,
         email,
+        username,
+        profilePicture: null,
         password: hashedPassword,
       },
     });
 
     if (newUser) {
-      const { id, firstName, lastName, email } = newUser;
+      const { id, profileName, email, isPremium, profilePicture } = newUser;
 
       const accessToken = generateAccessToken({
         id,
-        firstName,
-        lastName,
+        username,
+        profileName,
         email,
+        isPremium,
+        profilePicture: profilePicture ? profilePicture : "default",
       });
 
       const refreshToken = generateRefreshToken({
         id,
-        firstName,
-        lastName,
+        username,
+        profileName,
         email,
+        isPremium,
+        profilePicture: profilePicture ? profilePicture : "default",
       });
 
       res
@@ -65,8 +70,7 @@ export const registerUser = async (req: Request, res: Response) => {
 
       return res.status(201).json({
         id,
-        firstName,
-        lastName,
+        profileName,
         email,
         accessToken,
       });
@@ -100,20 +104,31 @@ export const loginUser = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Invalid credentials" });
     }
 
-    const { id, firstName, lastName, email: userEmail } = user;
+    const {
+      id,
+      username,
+      profileName,
+      profilePicture,
+      isPremium,
+      email: userEmail,
+    } = user;
 
     const accessToken = generateAccessToken({
       id,
-      firstName,
-      lastName,
+      username,
+      profileName,
       email,
+      isPremium,
+      profilePicture: profilePicture ? profilePicture : "default",
     });
 
     const refreshToken = generateRefreshToken({
       id,
-      firstName,
-      lastName,
+      username,
+      profileName,
       email,
+      isPremium,
+      profilePicture: profilePicture ? profilePicture : "default",
     });
 
     res
@@ -127,9 +142,8 @@ export const loginUser = async (req: Request, res: Response) => {
 
     return res.status(201).json({
       id,
-      firstName,
-      lastName,
-      email: userEmail,
+      profileName,
+      email,
       accessToken,
     });
   } catch (err) {
@@ -163,8 +177,10 @@ export const refreshUser = async (req: Request, res: Response) => {
       where: { id },
       select: {
         id: true,
-        firstName: true,
-        lastName: true,
+        profileName: true,
+        username: true,
+        isPremium: true,
+        profilePicture: true,
         email: true,
         password: false,
       },
@@ -188,24 +204,24 @@ export const refreshUser = async (req: Request, res: Response) => {
 };
 
 export const updateUser = async (req: Request, res: Response) => {
+  const { profileName } = req.body;
+  const { user } = req;
+
+  if (!user) {
+    return res
+      .status(400)
+      .json({ error: "Not authoriized, please login or register" });
+  }
+
+  const { id: userId } = user;
+
   try {
-    const { firstName, lastName } = req.body;
-
-    if (!req.user) {
-      return res
-        .status(400)
-        .json({ error: "Not authoriized, please login or register" });
-    }
-
-    const { id: userId } = req.user;
-
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: {
-        firstName,
-        lastName,
+        profileName,
       },
-      select: { firstName: true, lastName: true, email: true },
+      select: { profileName: true, email: true },
     });
 
     res.status(200).json(updatedUser);
@@ -216,18 +232,20 @@ export const updateUser = async (req: Request, res: Response) => {
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
-  if (!req.user) {
+  const { user } = req;
+
+  if (!user) {
     return res
       .status(400)
       .json({ error: "Not authoriized, please login or register" });
   }
 
-  const { id: userId } = req.user;
+  const { id: userId } = user;
 
   try {
     const deletedUser = await prisma.user.delete({
       where: { id: userId },
-      select: { firstName: true, lastName: true, email: true },
+      select: { profileName: true, email: true },
     });
 
     res.status(200).json({ message: "User deleted", user: deletedUser });

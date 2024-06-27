@@ -1,0 +1,111 @@
+Auth:
+- Register
+- Login
+- Login As Guest
+- Logout
+- Logout As Guest
+
+Post & Comments:
+- View tweets
+- Post tweets (capped limit)
+- Delete tweets
+- Edit tweets (premium)
+- Write long tweets (premium)
+- Like tweets
+- Bookmark tweets (premium) (nice to have)
+- Comments tweets
+- Comments get likes
+- Comments on Comments
+
+Users:
+- Edit profile
+- Follow
+- Unfollow
+
+*Chat comes later*
+*Premium comes later*
+
+
+Models:
+    User:
+        id String @id @default(uuid())
+        username String @unique @db.VarChar(20)
+        email String @unique
+        profileName String 
+        password String 
+        profilePicture String?
+        isPremium Boolean @default(false)
+        posts Post[]
+        comments Comment[]
+        bookmarks Post[] (nice to have)
+        followers User[]
+        following User[]
+
+
+    Post
+      id String @id @default(uuid())
+      content String
+      author User @relation(fields: [authorId], references: [id])
+      authorId String
+      likes User[] @default(null) /  # Collect users that have liked post, convert to number
+      comments Comment[]
+
+    Comment
+        id String @id @default(uuid())
+        content String
+        likes User[] @default(null) /  # Collect users that have liked post, convert to number
+        author User @relation(fields: [authorId], references: [id])
+        post Post @relation(fields: [postId], references: [id])
+        authorId String
+        postId String
+        comments Comments[]
+
+
+
+# Frontend
+Pages:
+
+Pages:
+Auth
+    - login page
+    - register page
+
+    - Main page
+        Tabs:
+            - General feed posts (not authenticated)
+            - Main posts by users I follow (authenticated)
+    - Single post page
+    - User profile page for editing details
+    - Specific User page
+        Tabs:
+            - Posts by Specific user
+            - Liked Posts by Specific user (nice to have)
+
+# Backend
+Endpoints:
+Auth:
+    - Register
+    - Login
+    - Login As Guest
+    - Logout As Guest
+    - Refresh
+    - Follow
+    - Unfollow
+    - Edit profile
+
+Posts:
+    - Get General posts
+    - Get posts of people I follow (main feed posts)
+    - Create Post
+    - Delete Post
+    - update Post
+    - Like Post
+    - Comment on Post
+
+Comments:
+    - Read comment
+    - Comment on comment
+    - Delete comment
+    - update on comment
+    - Like comment
+

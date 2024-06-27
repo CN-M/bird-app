@@ -11,11 +11,12 @@ const { SECRET, REFRESH_SECRET } = process.env;
 declare global {
   namespace Express {
     interface User {
-      id: number;
+      id: string;
+      profileName: string;
+      profilePictrue?: string | null;
+      username: string;
+      isPremium: boolean;
       email: string;
-      firstName: string;
-      lastName: string;
-      //   password: string | null;
     }
 
     interface Request {
@@ -49,8 +50,10 @@ export const protect = async (
       where: { id },
       select: {
         id: true,
-        firstName: true,
-        lastName: true,
+        username: true,
+        profileName: true,
+        profilePicture: true,
+        isPremium: true,
         email: true,
         password: false,
       },
@@ -71,8 +74,10 @@ export const protect = async (
           where: { id },
           select: {
             id: true,
-            firstName: true,
-            lastName: true,
+            username: true,
+            profileName: true,
+            profilePicture: true,
+            isPremium: true,
             email: true,
             password: false,
           },

@@ -1,6 +1,9 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,18 +14,42 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
+  username String @unique @db.VarChar(20)
   email String @unique
-  firstName String 
-  lastName String 
-  password String
-  task Task[]
+  profileName String 
+  password String 
+  profilePicture String?
+  isPremium Boolean @default(false)
+  posts Post[]
+  comments Comment[]
+  // followers Follows[] @relation("follower")
+  // following Follows[] @relation("following")
 }
 
-model Task {
-  id Int @id @default(autoincrement())
-  task String
-  completed Boolean @default(false)
+// model Follows {
+//   @@id([followerId, followingId])
+//   follower User @relation(fields: [followerId], references: [id])
+//   followerId String 
+//   following User @relation(fields: [followingId], references: [id])
+//   followingId String 
+// }
+
+model Post {
+  id String @id @default(uuid())
+  content String
   author User @relation(fields: [authorId], references: [id])
-  authorId Int
+  authorId String
+  likes Int @default(0)
+  comments Comment[]
+}
+
+model Comment {
+  id String @id @default(uuid())
+  content String
+  likes Int @default(0)
+  author User @relation(fields: [authorId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+  authorId String
+  postId String
 }

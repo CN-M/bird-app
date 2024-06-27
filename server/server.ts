@@ -12,7 +12,7 @@ dotenv.config();
 import { catch404, errorHandler } from "./middleware/errorMiddleware";
 
 // Import Routes
-import taskRoute from "./routes/taskRoute";
+import postRoute from "./routes/postRoute";
 import userRoute from "./routes/userRoute";
 
 const { PORT, NODE_ENV } = process.env;
@@ -45,7 +45,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/account", userRoute);
-app.use("/", taskRoute);
+app.use("/", postRoute);
 
 // Error Middleware
 app.use(catch404);

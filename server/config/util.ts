@@ -4,9 +4,11 @@ require("dotenv").config();
 const { SECRET, REFRESH_SECRET } = process.env;
 
 type User = {
-  id: number;
-  firstName: string;
-  lastName: string;
+  id: string;
+  profileName: string;
+  profilePicture: string | null;
+  username: string;
+  isPremium: boolean;
   email: string;
 };
 
