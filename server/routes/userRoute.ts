@@ -2,9 +2,15 @@ import express from "express";
 
 const router = express.Router();
 
-import { deleteUser, updateUser } from "../controllers/userController";
+import {
+  deleteUserAccount,
+  editUserProfile,
+} from "../controllers/userController";
 import { protect } from "../middleware/authMiddleware";
 
-router.route("/").delete(protect, deleteUser).put(protect, updateUser);
+router
+  .route("/")
+  .delete(protect, deleteUserAccount)
+  .put(protect, editUserProfile);
 
 export default router;

@@ -1,26 +1,26 @@
 Auth:
-- Register
-- Login
-- Login As Guest
-- Logout
-- Logout As Guest
+- [ ] Register
+- [ ] Login
+- [ ] Login As Guest
+- [ ] Logout
+- [ ] Logout As Guest
 
 Post & Comments:
-- View tweets
-- Post tweets (capped limit)
-- Delete tweets
-- Edit tweets (premium)
-- Write long tweets (premium)
-- Like tweets
-- Bookmark tweets (premium) (nice to have)
-- Comments tweets
-- Comments get likes
-- Comments on Comments
+- [ ] View tweets
+- [ ] Post tweets (capped limit)
+- [ ] Delete tweets
+- [ ] Edit tweets (premium)
+- [ ] Write long tweets (premium)
+- [ ] Like tweets
+- [ ] Bookmark tweets (premium) (nice to have)
+- [ ] Comments tweets
+- [ ] Comments get likes
+- [ ] Comments on Comments
 
 Users:
-- Edit profile
-- Follow
-- Unfollow
+- [ ] Edit profile
+- [ ] Follow
+- [ ] Unfollow
 
 *Chat comes later*
 *Premium comes later*
@@ -67,45 +67,53 @@ Pages:
 
 Pages:
 Auth
-    - login page
-    - register page
+    - [ ] login page
+    - [ ] register page
 
-    - Main page
+    - [ ] Main page
         Tabs:
-            - General feed posts (not authenticated)
-            - Main posts by users I follow (authenticated)
-    - Single post page
-    - User profile page for editing details
-    - Specific User page
+            - [ ] General feed posts (not authenticated)
+            - [ ] Main posts by users I follow (authenticated)
+    - [ ] Single post page
+    - [ ] User profile page for editing details
+    - [ ] Specific User page
         Tabs:
-            - Posts by Specific user
-            - // Liked Posts by Specific user (nice to have)
+            - [ ] Posts by Specific user
+            - // [ ] Liked Posts by Specific user (nice to have)
 
 # Backend
 Endpoints:
 Auth:
-    - Register
-    - Login
-    - Login As Guest
-    - Logout As Guest
-    - Refresh
-    - Follow
-    - Unfollow
-    - Edit profile
+    - [X] Register 
+    - [X] Login 
+    - [ ] Login As Guest (frontend)
+    - [ ] Logout As Guest (frontend)
+    - [X] Refresh 
+
+    User to User:
+    - [X] Follow
+    - [X] Unfollow
+    - [X] Edit user profile
 
 Posts:
-    - Get General posts
-    - Get posts of people I follow (main feed posts)
-    - Create Post
-    - Delete Post
-    - update Post
-    - Like Post
-    - Comment on Post
+    - [X] Get General posts (figure out pagination)
+    - [ ] Get posts of people I follow (main feed posts)
+    - [X] Create Post
+    - [X] Delete Post
+    - [X] update Post
+    - [x] Like Post
+    - [x] Unlike Post
+    - [X] Comment on Post
 
 Comments:
-    - Read comment
-    - Comment on comment
-    - Delete comment
-    - update on comment (premium)
-    - Like comment
+    - [X] Read comment
+    - [X] Read reply
+    - [X] Comment on comment
+    - [X] Delete comment
+    - [X] update on comment (premium)
+    - [X] Like comment
+    - [X] Unlike comment
 
+Likes:
+    - [X] Read/count post likes
+    - [X] Read/count comment/reply likes

@@ -1,9 +1,49 @@
 import { Request, Response } from "express";
 import { prisma } from "../config/db";
 
-export const createComment = async (req: Request, res: Response) => {
-  const { content, postId } = req.body;
+export const getPostComments = async (req: Request, res: Response) => {
+  const { postId } = req.body;
 
+  try {
+    const comments = await prisma.comment.findFirst({
+      where: { postId },
+    });
+
+    if (!comments) {
+      return res
+        .status(200)
+        .json({ comments: 0, message: "No comments on this post" });
+    }
+
+    return res.status(200).json(comments);
+  } catch (err) {
+    console.error("Error fetching comments", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getCommentReplies = async (req: Request, res: Response) => {
+  const { commentId } = req.body;
+
+  try {
+    const comments = await prisma.comment.findFirst({
+      where: { parentCommentId: commentId },
+    });
+
+    if (!comments) {
+      return res
+        .status(200)
+        .json({ replies: 0, message: "No replies on this comment" });
+    }
+
+    return res.status(200).json(comments);
+  } catch (err) {
+    console.error("Error fetching replies", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const createPostComment = async (req: Request, res: Response) => {
   const { user } = req;
 
   if (!user) {
@@ -11,7 +51,7 @@ export const createComment = async (req: Request, res: Response) => {
       .status(400)
       .json({ error: "Not authoriized, please login or register" });
   }
-
+  const { content, postId } = req.body;
   const { id: userId } = user;
 
   try {
@@ -30,10 +70,35 @@ export const createComment = async (req: Request, res: Response) => {
   }
 };
 
-export const updateComment = async (req: Request, res: Response) => {
-  const { id: commentId } = req.params;
-  const { content } = req.body;
+export const createCommentReply = async (req: Request, res: Response) => {
+  const { user } = req;
 
+  if (!user) {
+    return res
+      .status(400)
+      .json({ error: "Not authoriized, please login or register" });
+  }
+  const { content, postId, commentId } = req.body;
+  const { id: userId } = user;
+
+  try {
+    const newPostComment = await prisma.comment.create({
+      data: {
+        content,
+        post: { connect: { id: postId } },
+        parentComment: { connect: { id: commentId } },
+        author: { connect: { id: userId } },
+      },
+    });
+
+    res.status(200).json(newPostComment);
+  } catch (err) {
+    console.error("Error creating comment:", err);
+    res.status(500).json({ error: "Internal server error." });
+  }
+};
+
+export const updateComment = async (req: Request, res: Response) => {
   const { user } = req;
 
   if (!user) {
@@ -43,8 +108,11 @@ export const updateComment = async (req: Request, res: Response) => {
   }
 
   if (!user.isPremium) {
-    return res.status(400).json({ error: "Not Premium" });
+    return res.status(400).json({ error: "Not Premium, not permitted" });
   }
+
+  const { id: commentId } = req.params;
+  const { content } = req.body;
 
   const { id: userId } = user;
 
@@ -57,8 +125,10 @@ export const updateComment = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Comment not found" });
     }
 
+    const { id } = comment;
+
     const updatedComment = await prisma.comment.update({
-      where: { id: commentId },
+      where: { id },
       data: {
         content,
       },
@@ -72,8 +142,6 @@ export const updateComment = async (req: Request, res: Response) => {
 };
 
 export const deleteComment = async (req: Request, res: Response) => {
-  const { id: commentId } = req.params;
-
   const { user } = req;
 
   if (!user) {
@@ -82,6 +150,7 @@ export const deleteComment = async (req: Request, res: Response) => {
       .json({ error: "Not authoriized, please login or register" });
   }
 
+  const { id: commentId } = req.params;
   const { id: userId } = user;
 
   try {
@@ -93,8 +162,10 @@ export const deleteComment = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Comment not found" });
     }
 
+    const { id } = comment;
+
     const deletedComment = await prisma.comment.delete({
-      where: { id: commentId, authorId: userId },
+      where: { id },
     });
 
     res
@@ -105,7 +176,3 @@ export const deleteComment = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error." });
   }
 };
-
-export const likeComment = async (req: Request, res: Response) => {};
-
-export const unlikeComment = async (req: Request, res: Response) => {};

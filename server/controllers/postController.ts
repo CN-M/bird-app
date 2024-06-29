@@ -23,11 +23,21 @@ export const getFollowingFeed = async (req: Request, res: Response) => {
       .json({ error: "Not authoriized, please login or register" });
   }
 
-  const { id } = user;
+  const { id: userId } = user;
 
   try {
+    const following = await prisma.follower.findMany({
+      where: { followingId: userId },
+    });
+
+    if (!following) {
+      return res.status(400).json({ error: "User not following anyone" });
+    }
+
+    // Too tired. Finish later
+
     const posts = await prisma.post.findMany({
-      where: { authorId: id },
+      where: { authorId: userId },
     });
 
     res.status(200).json(posts);
@@ -40,13 +50,14 @@ export const getFollowingFeed = async (req: Request, res: Response) => {
 // Get feed of posts by 1 user
 export const getSingleUserFeed = async (req: Request, res: Response) => {
   const { user } = req;
-  const { id } = req.params;
 
   if (!user) {
     return res
       .status(400)
       .json({ error: "Not authoriized, please login or register" });
   }
+
+  const { id } = req.params;
 
   try {
     const posts = await prisma.post.findMany({
@@ -62,8 +73,6 @@ export const getSingleUserFeed = async (req: Request, res: Response) => {
 };
 
 export const createPost = async (req: Request, res: Response) => {
-  const { content } = req.body;
-
   const { user } = req;
 
   if (!user) {
@@ -71,7 +80,7 @@ export const createPost = async (req: Request, res: Response) => {
       .status(400)
       .json({ error: "Not authoriized, please login or register" });
   }
-
+  const { content } = req.body;
   const { id: userId } = user;
 
   try {
@@ -90,9 +99,6 @@ export const createPost = async (req: Request, res: Response) => {
 };
 
 export const updatePost = async (req: Request, res: Response) => {
-  const { id: postId } = req.params;
-  const { content } = req.body;
-
   const { user } = req;
 
   if (!user) {
@@ -102,9 +108,11 @@ export const updatePost = async (req: Request, res: Response) => {
   }
 
   if (!user.isPremium) {
-    return res.status(400).json({ error: "Not Premium" });
+    return res.status(400).json({ error: "Not Premium, not permitted" });
   }
 
+  const { id: postId } = req.params;
+  const { content } = req.body;
   const { id: userId } = user;
 
   try {
@@ -116,8 +124,10 @@ export const updatePost = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Post not found" });
     }
 
+    const { id } = post;
+
     const updatedPost = await prisma.post.update({
-      where: { id: postId },
+      where: { id },
       data: {
         content,
       },
@@ -131,8 +141,6 @@ export const updatePost = async (req: Request, res: Response) => {
 };
 
 export const deletePost = async (req: Request, res: Response) => {
-  const { id: postId } = req.params;
-
   const { user } = req;
 
   if (!user) {
@@ -141,6 +149,7 @@ export const deletePost = async (req: Request, res: Response) => {
       .json({ error: "Not authoriized, please login or register" });
   }
 
+  const { id: postId } = req.params;
   const { id: userId } = user;
 
   try {
@@ -152,8 +161,10 @@ export const deletePost = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Post not found" });
     }
 
+    const { id } = post;
+
     const deletedPost = await prisma.post.delete({
-      where: { id: postId, authorId: userId },
+      where: { id },
     });
 
     res.status(200).json({ message: "Post deleted", post: deletedPost });
@@ -162,7 +173,3 @@ export const deletePost = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error." });
   }
 };
-
-export const likePost = async (req: Request, res: Response) => {};
-
-export const unlikePost = async (req: Request, res: Response) => {};
