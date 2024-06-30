@@ -97,7 +97,7 @@ Auth:
 
 Posts:
     - [X] Get General posts (figure out pagination)
-    - [ ] Get posts of people I follow (main feed posts)
+    - [X] Get posts of people I follow (main feed posts)
     - [X] Create Post
     - [X] Delete Post
     - [X] update Post

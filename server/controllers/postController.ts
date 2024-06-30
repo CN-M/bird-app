@@ -28,16 +28,21 @@ export const getFollowingFeed = async (req: Request, res: Response) => {
   try {
     const following = await prisma.follower.findMany({
       where: { followingId: userId },
+      select: { followingId: true },
     });
 
-    if (!following) {
+    if (!following || following.length === 0) {
       return res.status(400).json({ error: "User not following anyone" });
     }
 
-    // Too tired. Finish later
+    const followingIds = following.map((user) => user.followingId);
 
     const posts = await prisma.post.findMany({
-      where: { authorId: userId },
+      where: {
+        author: {
+          id: { in: [...followingIds, userId] },
+        },
+      },
     });
 
     res.status(200).json(posts);
