@@ -14,7 +14,8 @@
     "dev-server": "nodemon server/server.ts",
     "client": "pnpm run --prefix client dev",
     "dev": "concurrently \"npx tsc --watch\" \"ts-node server/server.ts\" \"pnpm run client\"",
-    "prod": "concurrently \"pnpm run start\" \"pnpm run client\""
+    "prod": "concurrently \"pnpm run start\" \"pnpm run client\"",
+    "seed": "ts-node server/prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -33,6 +34,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/compression": "^1.7.5",
     "@types/cookie-parser": "^1.4.7",
