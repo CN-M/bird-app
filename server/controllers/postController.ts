@@ -54,19 +54,19 @@ export const getFollowingFeed = async (req: Request, res: Response) => {
 
 // Get feed of posts by 1 user
 export const getSingleUserFeed = async (req: Request, res: Response) => {
-  const { user } = req;
+  // const { user } = req;
 
-  if (!user) {
-    return res
-      .status(400)
-      .json({ error: "Not authoriized, please login or register" });
-  }
+  // if (!user) {
+  //   return res
+  //     .status(400)
+  //     .json({ error: "Not authoriized, please login or register" });
+  // }
 
-  const { id } = req.params;
+  const { userId } = req.params;
 
   try {
     const posts = await prisma.post.findMany({
-      where: { authorId: id },
+      where: { authorId: userId },
       take: 10,
     });
 
@@ -74,6 +74,22 @@ export const getSingleUserFeed = async (req: Request, res: Response) => {
   } catch (err) {
     console.error("Error fetching posts:", err);
     res.status(500).json({ error: "Internal server error." });
+  }
+};
+
+export const getSinglePost = async (req: Request, res: Response) => {
+  try {
+    const { postId } = req.params;
+
+    const post = await prisma.post.findFirst({ where: { id: postId } });
+    if (!post) {
+      res.status(400).json({ error: "Post not found" });
+    }
+
+    res.status(200).json(post);
+  } catch (err) {
+    console.error("Error fetching post:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -116,7 +132,7 @@ export const updatePost = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "Not Premium, not permitted" });
   }
 
-  const { id: postId } = req.params;
+  const { postId } = req.params;
   const { content } = req.body;
   const { id: userId } = user;
 
@@ -154,7 +170,7 @@ export const deletePost = async (req: Request, res: Response) => {
       .json({ error: "Not authoriized, please login or register" });
   }
 
-  const { id: postId } = req.params;
+  const { postId } = req.params;
   const { id: userId } = user;
 
   try {

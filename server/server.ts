@@ -13,6 +13,8 @@ import { catch404, errorHandler } from "./middleware/errorMiddleware";
 
 // Import Routes
 import authRoute from "./routes/authRoute";
+import commentRoute from "./routes/commentRoute";
+import likeRoute from "./routes/likeRoute";
 import postRoute from "./routes/postRoute";
 import userRoute from "./routes/userRoute";
 
@@ -47,7 +49,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/account", authRoute);
 app.use("/user", userRoute);
-app.use("/post", postRoute);
+app.use("/posts", postRoute);
+app.use("/comments", commentRoute);
+app.use("/likes", likeRoute);
 
 // Error Middleware
 app.use(catch404);
