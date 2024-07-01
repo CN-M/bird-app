@@ -6,7 +6,8 @@ Auth:
 - [ ] Logout As Guest
 
 Post & Comments:
-- [ ] View tweets
+- [ ] View general tweets
+- [ ] View feed tweets
 - [ ] Post tweets (capped limit)
 - [ ] Delete tweets
 - [ ] Edit tweets (premium)
@@ -67,18 +68,18 @@ Pages:
 
 Pages:
 Auth
-    - [ ] login page
-    - [ ] register page
+    - [X] login page
+    - [X] register page
 
-    - [ ] Main page
+    - [X] Main page
         Tabs:
-            - [ ] General feed posts (not authenticated)
-            - [ ] Main posts by users I follow (authenticated)
-    - [ ] Single post page
-    - [ ] User profile page for editing details
-    - [ ] Specific User page
+            - [X] General feed posts (not authenticated)
+            - [X] Main posts by users I follow (authenticated)
+    - [X] Single post page
+    - [X] User profile page for editing details
+    - [X] Specific User page
         Tabs:
-            - [ ] Posts by Specific user
+            - [X] Posts by Specific user
             - // [ ] Liked Posts by Specific user (nice to have)
 
 # Backend

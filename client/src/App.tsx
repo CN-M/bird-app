@@ -7,7 +7,8 @@ import { Navbar } from "./components/navbar";
 import { Main } from "./pages/MainPage";
 import { Login } from "./pages/auth/Login";
 import { Register } from "./pages/auth/Register";
-import { User } from "./pages/userPage";
+import { SinglePost } from "./pages/singlePostPage";
+import { SingleUserPage } from "./pages/singleUserPage";
 import { UserProfile } from "./pages/userProfile";
 
 function App() {
@@ -20,7 +21,8 @@ function App() {
             <Route path="/" element={<Main />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/:userId" element={<User />} />
+            <Route path="/:userId" element={<SingleUserPage />} />
+            <Route path="/:userId/:postId" element={<SinglePost />} />
             <Route path="/:userId/profile" element={<UserProfile />} />
           </Routes>
           <Footer />

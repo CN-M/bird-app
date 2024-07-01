@@ -13,7 +13,7 @@ type User = {
 };
 
 export const generateAccessToken = (user: User) => {
-  return jwt.sign(user, SECRET!, { expiresIn: "1h" });
+  return jwt.sign(user, SECRET!, { expiresIn: "10" });
 };
 
 export const generateRefreshToken = (user: User) => {

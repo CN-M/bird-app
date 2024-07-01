@@ -2,14 +2,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { rootURL } from "../lib/utils";
 
-export const FollowFeed = () => {
+export const SingleUserFeed = ({ userId }: { userId: string }) => {
   const [feedPosts, setFeedPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const getFollowFeed = async () => {
+    const getSingleUserFeed = async () => {
       try {
-        const response = await axios.get(`${rootURL}/posts/feed`, {
+        const response = await axios.get(`${rootURL}/posts/${userId}/feed`, {
           withCredentials: true,
         });
 
@@ -25,12 +25,11 @@ export const FollowFeed = () => {
       }
     };
 
-    getFollowFeed();
+    getSingleUserFeed();
   });
-
   return (
     <>
-      <p>Follow Feed</p>
+      <p>Posts By User Feed</p>
     </>
   );
 };

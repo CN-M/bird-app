@@ -2,20 +2,29 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { rootURL } from "../lib/utils";
 
-export const FollowFeed = () => {
-  const [feedPosts, setFeedPosts] = useState([]);
+export const SinglePostComponent = ({
+  userId,
+  postId,
+}: {
+  userId: string;
+  postId: string;
+}) => {
+  const [post, setPost] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const getFollowFeed = async () => {
+    const getSingleUserFeed = async () => {
       try {
-        const response = await axios.get(`${rootURL}/posts/feed`, {
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          `${rootURL}/posts/${userId}/${postId}`,
+          {
+            withCredentials: true,
+          }
+        );
 
         const { data } = response;
 
-        setFeedPosts(data);
+        setPost(data);
         console.log(data);
 
         setIsLoading(false);
@@ -25,12 +34,11 @@ export const FollowFeed = () => {
       }
     };
 
-    getFollowFeed();
+    getSingleUserFeed();
   });
-
   return (
     <>
-      <p>Follow Feed</p>
+      <p>Posts By User Feed</p>
     </>
   );
 };

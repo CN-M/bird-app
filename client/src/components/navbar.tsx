@@ -13,7 +13,7 @@ export const Navbar = () => {
               onClick={() => navigate("/")}
               className="text-white text-2xl font-bold"
             >
-              Task Taker
+              Bird App
             </button>
           </div>
           <div className="flex space-x-4 items-center">

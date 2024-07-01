@@ -13,15 +13,18 @@ import {
 } from "../controllers/postController";
 import { protect } from "../middleware/authMiddleware";
 
-router.route("/").get(getGeneralFeed).post(protect, createPost);
+router
+  .route("/")
+  .get(getGeneralFeed) // X
+  .post(protect, createPost);
 
-router.route("/feed").get(protect, getFollowingFeed);
+router.route("/feed").get(protect, getFollowingFeed); // X
 
-router.route("/:userId/feed").get(getSingleUserFeed);
+router.route("/:userId/feed").get(getSingleUserFeed); // X
 
 router
   .route("/:postId")
-  .get(getSinglePost)
+  .get(getSinglePost) // ${rootURL}/posts/${userId}/${postId} // X
   .put(protect, updatePost)
   .delete(protect, deletePost);
 

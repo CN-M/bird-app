@@ -13,7 +13,9 @@
     "start": "node dist/server/server.js",
     "dev-server": "nodemon server/server.ts",
     "client": "pnpm run --prefix client dev",
-    "dev": "concurrently \"npx tsc --watch\" \"ts-node server/server.ts\" \"pnpm run client\"",
+    "server": "ts-node server/server.ts",
+    "dev-what": "concurrently \"npx tsc --watch\" \"ts-node server/server.ts\" \"pnpm run client\"",
+    "dev": "concurrently \"pnpm run server\" \"pnpm run client\"",
     "prod": "concurrently \"pnpm run start\" \"pnpm run client\"",
     "seed": "ts-node server/prisma/seed.ts"
   },

@@ -19,3 +19,5 @@ export const checkAndDeleteExpiredItem = (key: string, maxAge: number) => {
     localStorage.removeItem(key);
   }
 };
+
+export const rootURL = "http://localhost:3000/";
