@@ -87,8 +87,8 @@ Endpoints:
 Auth:
     - [X] Register 
     - [X] Login 
-    - [ ] Login As Guest (frontend)
-    - [ ] Logout As Guest (frontend)
+    - [X] Login As Guest (frontend)
+    - [X] Logout As Guest (frontend)
     - [X] Refresh 
 
     User to User:

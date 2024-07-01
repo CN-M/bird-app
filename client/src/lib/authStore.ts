@@ -7,12 +7,15 @@ const user = JSON.parse(localStorage.getItem("user")!);
 
 interface AuthState {
   isAuthenticated: boolean;
+  isGuest: boolean;
   isError: boolean;
   isLoading: boolean;
   user: User | null;
   errorMessage: string;
   login: (userData: { email: string; password: string }) => void;
+  loginAsGuest: () => void;
   logout: () => void;
+  logoutGuest: () => void;
   register: (userData: {
     firstName: string;
     lastName: string;
@@ -24,6 +27,7 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: user ? true : false,
   isError: false,
+  isGuest: false,
   isLoading: false,
   user: user ? user : null,
   errorMessage: "",
@@ -32,6 +36,34 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const data: User = await login(userData);
       set({ isAuthenticated: true, user: data });
+      toast.success("Successfully logged in!");
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      const { error } = err.response.data;
+
+      set({
+        isError: true,
+        errorMessage:
+          err.response.data.error || "An error occurred during login",
+      });
+
+      toast.error(error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  loginAsGuest: async () => {
+    set({ isLoading: true, isError: false, errorMessage: "" });
+    try {
+      const guestData = {
+        email: "batman@wayne.com",
+        password: "SUPERMANSUCKZ",
+      };
+
+      const data: User = await login(guestData);
+      set({ isAuthenticated: true, user: data, isGuest: true });
       toast.success("Successfully logged in!");
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -83,6 +115,27 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       await logout();
       set({ isAuthenticated: false, user: null });
+      toast.success("Successfully logged out!");
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      const { error } = err.response.data;
+
+      set({
+        isError: true,
+        errorMessage: error || "An error occurred during logout",
+      });
+
+      toast.error(error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  logoutGuest: async () => {
+    set({ isLoading: true, isError: false, errorMessage: "" });
+    try {
+      await logout();
+      set({ isAuthenticated: false, user: null, isGuest: false });
       toast.success("Successfully logged out!");
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
