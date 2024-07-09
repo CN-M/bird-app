@@ -26,7 +26,7 @@ export const GeneralFeed = () => {
     };
 
     getGeneralFeed();
-  });
+  }, []);
   return (
     <>
       <p>General Feed</p>
