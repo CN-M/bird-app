@@ -1,9 +1,11 @@
 import { faker } from "@faker-js/faker";
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
+  const hashedPassword = await bcrypt.hash("12345", 12);
   // Create fake users
   const users = [];
   for (let i = 0; i < 10; i++) {
@@ -12,7 +14,8 @@ async function main() {
         username: faker.internet.userName(),
         email: faker.internet.email(),
         profileName: faker.person.fullName(),
-        password: "12345",
+      password: hashedPassword,
+
         profilePicture: faker.image.avatar(),
         isPremium: faker.datatype.boolean(),
       },
