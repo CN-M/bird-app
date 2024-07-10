@@ -11,7 +11,7 @@ interface UserDetails extends User {
   posts: Post[];
 }
 
-export const SingleUserPage = () => {
+export const SingleUser = () => {
   const { username } = useParams();
 
   const [user, setUser] = useState<UserDetails>();

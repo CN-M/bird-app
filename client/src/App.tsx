@@ -4,11 +4,12 @@ import { Toaster } from "react-hot-toast";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { Footer } from "./components/footer";
 import { Navbar } from "./components/navbar";
-import { Main } from "./pages/MainPage";
+import { Main } from "./pages/Main";
 import { Login } from "./pages/auth/Login";
 import { Register } from "./pages/auth/Register";
-import { SinglePost } from "./pages/singlePostPage";
-import { SingleUserPage } from "./pages/singleUserPage";
+import { SingleComment } from "./pages/singleComment";
+import { SinglePost } from "./pages/singlePost";
+import { SingleUser } from "./pages/singleUser";
 import { UserProfile } from "./pages/userProfile";
 
 function App() {
@@ -21,8 +22,12 @@ function App() {
             <Route path="/" element={<Main />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/:username" element={<SingleUserPage />} />
+            <Route path="/:username" element={<SingleUser />} />
             <Route path="/:username/:postId" element={<SinglePost />} />
+            <Route
+              path="/comment/:postId/:commentId"
+              element={<SingleComment />}
+            />
             <Route path="/:username/profile" element={<UserProfile />} />
           </Routes>
           <Footer />

@@ -2,6 +2,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 import { User } from "../types";
+import { rootURL } from "./utils";
 
 const user = JSON.parse(localStorage.getItem("user")!);
 
@@ -131,6 +132,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ isLoading: false });
     }
   },
+
   logoutGuest: async () => {
     set({ isLoading: true, isError: false, errorMessage: "" });
     try {
@@ -160,11 +162,9 @@ const register = async (userData: {
   email: string;
   password: string;
 }) => {
-  const response = await axios.post(
-    "http://localhost:3000/account/register",
-    userData,
-    { withCredentials: true }
-  );
+  const response = await axios.post(`${rootURL}/account/register`, userData, {
+    withCredentials: true,
+  });
 
   if (response.data) {
     const { data } = response;
@@ -176,11 +176,9 @@ const register = async (userData: {
 };
 
 const login = async (userData: { username: string; password: string }) => {
-  const response = await axios.post(
-    "http://localhost:3000/account/login",
-    userData,
-    { withCredentials: true }
-  );
+  const response = await axios.post(`${rootURL}/account/login`, userData, {
+    withCredentials: true,
+  });
 
   if (response.data) {
     const { data } = response;
@@ -196,7 +194,7 @@ const login = async (userData: { username: string; password: string }) => {
 };
 
 const logout = async () => {
-  const response = await axios.post("http://localhost:3000/account/logout", {
+  const response = await axios.post(`${rootURL}/account/logout`, {
     withCredentials: true,
   });
 

@@ -5,7 +5,7 @@ export type Todo = {
   // email: string;
 };
 
-export interface User {
+export type User = {
   id: string;
   username: string;
   email: string;
@@ -13,16 +13,20 @@ export interface User {
   profilePicture: string;
   isPremium: boolean;
   accessToken: string;
+  posts: Post[];
   timestamp: number;
-  following: User[];
+  likes: Like[];
   followers: User[];
-}
+  following: User[];
+};
 
 export type Post = {
   id: string;
   content: string;
   author: User;
   authorId: string;
+  likes: Like[];
+  comments: Comment[];
   createdAt: number;
   updatedAT: number;
 };
@@ -32,10 +36,14 @@ export type Comment = {
   content: string;
   author: User;
   post: Post;
-  authorId: string;
   postId: string;
+  authorId: string;
   createdAt: number;
   updatedAT: number;
+  likes: Like[];
+  parentComment?: Comment[];
+  parentCommentId?: string;
+  replies: Comment[];
 };
 
 export type Like = {

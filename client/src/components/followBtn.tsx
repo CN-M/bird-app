@@ -12,10 +12,15 @@ export const Follow = ({ followingId }: { followingId: string }) => {
     setIsLoading(true);
 
     try {
+      console.log(user?.accessToken);
+
       await axios.post(
         `${rootURL}/user/follow`,
         { followingId },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: { Authorization: `Bearer ${user?.accessToken}` },
+        }
       );
       setIsLoading(false);
       console.log(followingId);

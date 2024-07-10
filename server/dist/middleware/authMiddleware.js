@@ -30,17 +30,18 @@ const util_1 = require("../config/util");
 require("dotenv").config();
 const { SECRET, REFRESH_SECRET } = process.env;
 const protect = async (req, res, next) => {
-    console.log("Middleware");
     let accessToken = req.headers.authorization && req.headers.authorization.startsWith("Bearer")
         ? req.headers.authorization.split(" ")[1]
         : null;
     let refreshToken = req.cookies["refreshToken"]
         ? req.cookies["refreshToken"]
         : null;
+    console.log("Authorized 1");
+    console.log(accessToken);
+    console.log(refreshToken);
     if (!accessToken || !refreshToken) {
         return res.status(401).json({ error: "Not authorized, no tokens" });
     }
-    console.log("Authorized");
     try {
         const { id } = jsonwebtoken_1.default.verify(accessToken, SECRET);
         const user = await db_1.prisma.user.findFirst({

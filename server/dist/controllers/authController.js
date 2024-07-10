@@ -4,10 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.refreshUser = exports.logoutUser = exports.loginUser = exports.registerUser = void 0;
-const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const db_1 = require("../config/db");
 const util_1 = require("../config/util");
+//
 require("dotenv").config();
 const { REFRESH_SECRET, NODE_ENV } = process.env;
 require("dotenv").config();
@@ -17,8 +17,9 @@ const registerUser = async (req, res) => {
         if (!email || !profileName || !username || !password) {
             return res.status(400).json({ error: "Please fill in all fields" });
         }
+        const lowercaseUsername = username.toLowerCase();
         const userExists = await db_1.prisma.user.findFirst({
-            where: { username },
+            where: { username: lowercaseUsername },
         });
         if (userExists) {
             return res.status(400).json({ error: "User already exists" });
@@ -28,7 +29,7 @@ const registerUser = async (req, res) => {
             data: {
                 profileName,
                 email,
-                username,
+                username: lowercaseUsername,
                 profilePicture: null,
                 // password: hashedPassword,
                 password,
@@ -61,7 +62,7 @@ const registerUser = async (req, res) => {
             return res.status(201).json({
                 id,
                 profileName,
-                email,
+                username,
                 accessToken,
             });
         }
@@ -82,13 +83,16 @@ const loginUser = async (req, res) => {
         if (!username || !password) {
             return res.status(400).json({ error: "Please fill in all fields" });
         }
+        const lowercaseUsername = username.toLowerCase();
         const user = await db_1.prisma.user.findFirst({
-            where: { username },
+            where: { username: lowercaseUsername },
         });
         if (!user) {
             return res.status(400).json({ error: "Invalid credentials" });
         }
-        const passwordMatch = await bcryptjs_1.default.compare(password, user.password);
+        // Remember to change this back
+        // const passwordMatch = await bcrypt.compare(password, user.password!);
+        const passwordMatch = password === user.password;
         if (!passwordMatch) {
             return res.status(400).json({ error: "Invalid credentials" });
         }
@@ -118,7 +122,7 @@ const loginUser = async (req, res) => {
         return res.status(201).json({
             id,
             profileName,
-            email,
+            username: userUsername,
             accessToken,
         });
     }

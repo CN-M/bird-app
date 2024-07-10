@@ -12,7 +12,27 @@ export const getUser = async (req: Request, res: Response) => {
       select: {
         profileName: true,
         id: true,
-        posts: true,
+        posts: {
+          select: {
+            author: true,
+            content: true,
+            id: true,
+            likes: true,
+            createdAt: true,
+            comments: {
+              select: {
+                author: { select: { username: true } },
+                content: true,
+                id: true,
+                parentCommentId: true,
+                likes: true,
+                createdAt: true,
+                postId: true,
+                replies: true,
+              },
+            },
+          },
+        },
         isPremium: true,
         username: true,
         profilePicture: true,

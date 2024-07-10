@@ -1,8 +1,10 @@
-import bcrypt from "bcryptjs";
+// import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { prisma } from "../config/db";
 import { generateAccessToken, generateRefreshToken } from "../config/util";
+
+//
 
 require("dotenv").config();
 
@@ -18,8 +20,10 @@ export const registerUser = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Please fill in all fields" });
     }
 
+    const lowercaseUsername = username.toLowerCase();
+
     const userExists = await prisma.user.findFirst({
-      where: { username },
+      where: { username: lowercaseUsername },
     });
 
     if (userExists) {
@@ -32,7 +36,7 @@ export const registerUser = async (req: Request, res: Response) => {
       data: {
         profileName,
         email,
-        username,
+        username: lowercaseUsername,
         profilePicture: null,
         // password: hashedPassword,
         password,
@@ -70,7 +74,7 @@ export const registerUser = async (req: Request, res: Response) => {
       return res.status(201).json({
         id,
         profileName,
-        email,
+        username,
         accessToken,
       });
     } else {
@@ -91,15 +95,19 @@ export const loginUser = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Please fill in all fields" });
     }
 
+    const lowercaseUsername = username.toLowerCase();
+
     const user = await prisma.user.findFirst({
-      where: { username },
+      where: { username: lowercaseUsername },
     });
 
     if (!user) {
       return res.status(400).json({ error: "Invalid credentials" });
     }
+    // Remember to change this back
+    // const passwordMatch = await bcrypt.compare(password, user.password!);
+    const passwordMatch = password === user.password!;
 
-    const passwordMatch = await bcrypt.compare(password, user.password!);
     if (!passwordMatch) {
       return res.status(400).json({ error: "Invalid credentials" });
     }
@@ -141,7 +149,7 @@ export const loginUser = async (req: Request, res: Response) => {
     return res.status(201).json({
       id,
       profileName,
-      email,
+      username: userUsername,
       accessToken,
     });
   } catch (err) {

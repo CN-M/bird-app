@@ -30,7 +30,6 @@ export const protect = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("Middleware");
   let accessToken =
     req.headers.authorization && req.headers.authorization.startsWith("Bearer")
       ? req.headers.authorization.split(" ")[1]
@@ -40,11 +39,14 @@ export const protect = async (
     ? req.cookies["refreshToken"]
     : null;
 
+  console.log("Authorized 1");
+
+  console.log(accessToken);
+  console.log(refreshToken);
+
   if (!accessToken || !refreshToken) {
     return res.status(401).json({ error: "Not authorized, no tokens" });
   }
-
-  console.log("Authorized");
 
   try {
     const { id } = jwt.verify(accessToken, SECRET!) as JwtPayload;

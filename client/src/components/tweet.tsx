@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import { Post } from "../types";
+import { CommentComp } from "./comment";
 import { UserComp } from "./user";
 
 export const Tweet = ({ post }: { post: Post }) => {
-  const { id, author, content, createdAt } = post;
+  const { id, author, content, createdAt, comments } = post;
   const { username } = author;
   return (
     <Link to={`/${username}/${id}`}>
@@ -13,6 +14,7 @@ export const Tweet = ({ post }: { post: Post }) => {
           <p>{content}</p>
           <p>Date: {createdAt}</p>
         </div>
+        <CommentComp comments={comments} />
       </div>
     </Link>
   );
