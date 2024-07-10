@@ -12,9 +12,9 @@ router
     .get(postController_1.getGeneralFeed) // X
     .post(authMiddleware_1.protect, postController_1.createPost);
 router.route("/feed").get(authMiddleware_1.protect, postController_1.getFollowingFeed); // X
-router.route("/:userId/feed").get(postController_1.getSingleUserFeed); // X
+router.route("/:username/feed").get(postController_1.getSingleUserFeed); // X
 router
-    .route("/:postId")
+    .route("/:username/:postId")
     .get(postController_1.getSinglePost) // ${rootURL}/posts/${userId}/${postId} // X
     .put(authMiddleware_1.protect, postController_1.updatePost)
     .delete(authMiddleware_1.protect, postController_1.deletePost);

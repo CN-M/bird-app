@@ -1,13 +1,17 @@
 import { GeneralFeed } from "../components/generalFeed";
+import { PostInput } from "../components/postInput";
 import { UserFeed } from "../components/userFeed";
 
 export const Main = () => {
   return (
     <>
       <h1>Main Page</h1>
-      <div className="flex justify-between">
+      <div className="border h-full w-full flex flex-col justify-between">
+        <PostInput />
+        <div className="">
         <GeneralFeed />
         <UserFeed />
+        </div>
       </div>
     </>
   );

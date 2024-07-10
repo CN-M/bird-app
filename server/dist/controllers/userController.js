@@ -1,8 +1,34 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unfollowUser = exports.followUser = exports.deleteUserAccount = exports.downgradeUser = exports.upgradeUser = exports.editUserProfile = void 0;
+exports.unfollowUser = exports.followUser = exports.deleteUserAccount = exports.downgradeUser = exports.upgradeUser = exports.editUserProfile = exports.getUser = void 0;
 const db_1 = require("../config/db");
 require("dotenv").config();
+const getUser = async (req, res) => {
+    console.log("working");
+    const { username } = req.params;
+    try {
+        console.log("working");
+        const user = await db_1.prisma.user.findFirst({
+            where: { username },
+            select: {
+                profileName: true,
+                id: true,
+                posts: true,
+                isPremium: true,
+                username: true,
+                profilePicture: true,
+                followers: true,
+                following: true,
+            },
+        });
+        res.status(200).json(user);
+    }
+    catch (err) {
+        console.error("Error updating user data:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+exports.getUser = getUser;
 const editUserProfile = async (req, res) => {
     const { user } = req;
     if (!user) {
@@ -11,10 +37,10 @@ const editUserProfile = async (req, res) => {
             .json({ error: "Not authoriized, please login or register" });
     }
     const { profileName, profilePicture } = req.body;
-    const { id: userId } = user;
+    const { username } = req.params;
     try {
         const updatedUser = await db_1.prisma.user.update({
-            where: { id: userId },
+            where: { username },
             data: {
                 profileName,
                 profilePicture,
@@ -39,10 +65,10 @@ const upgradeUser = async (req, res) => {
     if (user.isPremium) {
         return res.status(400).json({ error: "User already premium" });
     }
-    const { id: userId } = user;
+    const { username } = req.params;
     try {
         const updatedUser = await db_1.prisma.user.update({
-            where: { id: userId },
+            where: { username },
             data: {
                 isPremium: true,
             },
@@ -66,10 +92,10 @@ const downgradeUser = async (req, res) => {
     if (!user.isPremium) {
         return res.status(400).json({ error: "User already not premium" });
     }
-    const { id: userId } = user;
+    const { username } = req.params;
     try {
         const updatedUser = await db_1.prisma.user.update({
-            where: { id: userId },
+            where: { username },
             data: {
                 isPremium: false,
             },
@@ -90,10 +116,10 @@ const deleteUserAccount = async (req, res) => {
             .status(400)
             .json({ error: "Not authoriized, please login or register" });
     }
-    const { id: userId } = user;
+    const { username } = req.params;
     try {
         const deletedUser = await db_1.prisma.user.delete({
-            where: { id: userId },
+            where: { username },
             select: { profileName: true, email: true },
         });
         res.status(200).json({ message: "User deleted", user: deletedUser });

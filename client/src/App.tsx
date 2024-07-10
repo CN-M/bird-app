@@ -21,9 +21,9 @@ function App() {
             <Route path="/" element={<Main />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/:userId" element={<SingleUserPage />} />
-            <Route path="/:userId/:postId" element={<SinglePost />} />
-            <Route path="/:userId/profile" element={<UserProfile />} />
+            <Route path="/:username" element={<SingleUserPage />} />
+            <Route path="/:username/:postId" element={<SinglePost />} />
+            <Route path="/:username/profile" element={<UserProfile />} />
           </Routes>
           <Footer />
           <Toaster />

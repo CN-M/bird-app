@@ -20,10 +20,10 @@ router
 
 router.route("/feed").get(protect, getFollowingFeed); // X
 
-router.route("/:userId/feed").get(getSingleUserFeed); // X
+router.route("/:username/feed").get(getSingleUserFeed); // X
 
 router
-  .route("/:postId")
+  .route("/:username/:postId")
   .get(getSinglePost) // ${rootURL}/posts/${userId}/${postId} // X
   .put(protect, updatePost)
   .delete(protect, deletePost);

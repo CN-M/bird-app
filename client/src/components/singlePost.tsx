@@ -1,22 +1,24 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { rootURL } from "../lib/utils";
+import { Post } from "../types";
+import { Tweet } from "./tweet";
 
 export const SinglePostComponent = ({
-  userId,
+  username,
   postId,
 }: {
-  userId: string;
+  username: string;
   postId: string;
 }) => {
-  const [post, setPost] = useState();
+  const [post, setPost] = useState<Post>();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const getSingleUserFeed = async () => {
+    const getSinglePost = async () => {
       try {
         const response = await axios.get(
-          `${rootURL}/posts/${userId}/${postId}`,
+          `${rootURL}/posts/${username}/${postId}`,
           {
             withCredentials: true,
           }
@@ -34,11 +36,18 @@ export const SinglePostComponent = ({
       }
     };
 
-    getSingleUserFeed();
-  });
+    getSinglePost();
+  }, []);
   return (
     <>
-      <p>Posts By User Feed</p>
+      {isLoading ? (
+        <p>Loading post...</p>
+      ) : (
+        <>
+          {!post && <p>User does not exist</p>}
+          {post && <Tweet post={post} />}
+        </>
+      )}
     </>
   );
 };

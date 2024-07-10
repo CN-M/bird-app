@@ -3,6 +3,34 @@ import { prisma } from "../config/db";
 
 require("dotenv").config();
 
+export const getUser = async (req: Request, res: Response) => {
+  console.log("working");
+  const { username } = req.params;
+
+  try {
+    console.log("working");
+
+    const user = await prisma.user.findFirst({
+      where: { username },
+      select: {
+        profileName: true,
+        id: true,
+        posts: true,
+        isPremium: true,
+        username: true,
+        profilePicture: true,
+        followers: true,
+        following: true,
+      },
+    });
+
+    res.status(200).json(user);
+  } catch (err) {
+    console.error("Error updating user data:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 export const editUserProfile = async (req: Request, res: Response) => {
   const { user } = req;
 
@@ -13,11 +41,11 @@ export const editUserProfile = async (req: Request, res: Response) => {
   }
 
   const { profileName, profilePicture } = req.body;
-  const { id: userId } = user;
+  const { username } = req.params;
 
   try {
     const updatedUser = await prisma.user.update({
-      where: { id: userId },
+      where: { username },
       data: {
         profileName,
         profilePicture,
@@ -45,11 +73,11 @@ export const upgradeUser = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "User already premium" });
   }
 
-  const { id: userId } = user;
+  const { username } = req.params;
 
   try {
     const updatedUser = await prisma.user.update({
-      where: { id: userId },
+      where: { username },
       data: {
         isPremium: true,
       },
@@ -76,11 +104,11 @@ export const downgradeUser = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "User already not premium" });
   }
 
-  const { id: userId } = user;
+  const { username } = req.params;
 
   try {
     const updatedUser = await prisma.user.update({
-      where: { id: userId },
+      where: { username },
       data: {
         isPremium: false,
       },
@@ -103,11 +131,11 @@ export const deleteUserAccount = async (req: Request, res: Response) => {
       .json({ error: "Not authoriized, please login or register" });
   }
 
-  const { id: userId } = user;
+  const { username } = req.params;
 
   try {
     const deletedUser = await prisma.user.delete({
-      where: { id: userId },
+      where: { username },
       select: { profileName: true, email: true },
     });
 

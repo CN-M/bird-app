@@ -5,7 +5,25 @@ const db_1 = require("../config/db");
 // Do not need to be authed to see these
 const getGeneralFeed = async (req, res) => {
     try {
-        const posts = await db_1.prisma.post.findMany({ take: 10 });
+        const posts = await db_1.prisma.post.findMany({
+            take: 10,
+            select: {
+                author: {
+                    select: {
+                        id: true,
+                        profileName: true,
+                        isPremium: true,
+                        profilePicture: true,
+                        username: true,
+                    },
+                },
+                comments: true,
+                content: true,
+                likes: true,
+                createdAt: true,
+                id: true,
+            },
+        });
         res.status(200).json(posts);
     }
     catch (err) {
@@ -38,6 +56,22 @@ const getFollowingFeed = async (req, res) => {
                     id: { in: [...followingIds, userId] },
                 },
             },
+            select: {
+                author: {
+                    select: {
+                        id: true,
+                        profileName: true,
+                        isPremium: true,
+                        profilePicture: true,
+                        username: true,
+                    },
+                },
+                comments: true,
+                content: true,
+                likes: true,
+                createdAt: true,
+                id: true,
+            },
         });
         res.status(200).json(posts);
     }
@@ -49,17 +83,27 @@ const getFollowingFeed = async (req, res) => {
 exports.getFollowingFeed = getFollowingFeed;
 // Get feed of posts by 1 user
 const getSingleUserFeed = async (req, res) => {
-    // const { user } = req;
-    // if (!user) {
-    //   return res
-    //     .status(400)
-    //     .json({ error: "Not authoriized, please login or register" });
-    // }
-    const { userId } = req.params;
+    const { username } = req.params;
     try {
         const posts = await db_1.prisma.post.findMany({
-            where: { authorId: userId },
+            where: { author: { username } },
             take: 10,
+            select: {
+                author: {
+                    select: {
+                        id: true,
+                        profileName: true,
+                        isPremium: true,
+                        profilePicture: true,
+                        username: true,
+                    },
+                },
+                comments: true,
+                content: true,
+                likes: true,
+                createdAt: true,
+                id: true,
+            },
         });
         res.status(200).json(posts);
     }
@@ -72,7 +116,25 @@ exports.getSingleUserFeed = getSingleUserFeed;
 const getSinglePost = async (req, res) => {
     try {
         const { postId } = req.params;
-        const post = await db_1.prisma.post.findFirst({ where: { id: postId } });
+        const post = await db_1.prisma.post.findFirst({
+            where: { id: postId },
+            select: {
+                author: {
+                    select: {
+                        id: true,
+                        profileName: true,
+                        isPremium: true,
+                        profilePicture: true,
+                        username: true,
+                    },
+                },
+                comments: true,
+                content: true,
+                likes: true,
+                createdAt: true,
+                id: true,
+            },
+        });
         if (!post) {
             res.status(400).json({ error: "Post not found" });
         }
