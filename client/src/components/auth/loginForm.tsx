@@ -5,7 +5,7 @@ import { useAuthStore } from "../../lib/authStore";
 export const LoginForm = () => {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const login = useAuthStore((state) => state.login);
@@ -24,7 +24,7 @@ export const LoginForm = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleLogin = async (e: any) => {
     e.preventDefault();
-    login({ email, password });
+    login({ username, password });
   };
 
   return (
@@ -34,18 +34,23 @@ export const LoginForm = () => {
       </h2>
       <div className="flex flex-col items-center">
         <form onSubmit={handleLogin} className="flex flex-col space-y-3">
+          <label htmlFor="username">Username</label>
+
           <input
             className="border p-2 border-emerald-500 rounded-md focus:border-blue-500"
-            type="email"
-            placeholder="hulk@hogan.com"
-            value={email}
-            autoComplete="email"
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            name="username"
+            placeholder="hulk.hogan"
+            value={username}
+            autoComplete="username"
+            onChange={(e) => setUsername(e.target.value)}
             required
           />
+          <label htmlFor="password">Password</label>
           <input
             className="border p-2 border-emerald-500 rounded-md focus:border-blue-500"
             type="password"
+            name="password"
             autoComplete="current-password"
             placeholder="password"
             value={password}

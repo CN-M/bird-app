@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.refreshUser = exports.logoutUser = exports.loginUser = exports.registerUser = void 0;
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const db_1 = require("../config/db");
 const util_1 = require("../config/util");
@@ -39,7 +40,6 @@ const registerUser = async (req, res) => {
                 id,
                 username,
                 profileName,
-                email,
                 isPremium,
                 profilePicture: profilePicture ? profilePicture : "default",
             });
@@ -47,7 +47,6 @@ const registerUser = async (req, res) => {
                 id,
                 username,
                 profileName,
-                email,
                 isPremium,
                 profilePicture: profilePicture ? profilePicture : "default",
             });
@@ -78,27 +77,26 @@ const registerUser = async (req, res) => {
 exports.registerUser = registerUser;
 const loginUser = async (req, res) => {
     try {
-        const { email, password } = req.body;
-        if (!email || !password) {
+        const { username, password } = req.body;
+        console.log(req.body);
+        if (!username || !password) {
             return res.status(400).json({ error: "Please fill in all fields" });
         }
         const user = await db_1.prisma.user.findFirst({
-            where: { email },
+            where: { username },
         });
         if (!user) {
             return res.status(400).json({ error: "Invalid credentials" });
         }
-        // const passwordMatch = await bcrypt.compare(password, user.password!);
-        const passwordMatch = password === user.password;
+        const passwordMatch = await bcryptjs_1.default.compare(password, user.password);
         if (!passwordMatch) {
             return res.status(400).json({ error: "Invalid credentials" });
         }
-        const { id, username, profileName, profilePicture, isPremium, email: userEmail, } = user;
+        const { id, username: userUsername, profileName, profilePicture, isPremium, email, } = user;
         const accessToken = (0, util_1.generateAccessToken)({
             id,
-            username,
+            username: userUsername,
             profileName,
-            email,
             isPremium,
             profilePicture: profilePicture ? profilePicture : "default",
         });
@@ -106,7 +104,6 @@ const loginUser = async (req, res) => {
             id,
             username,
             profileName,
-            email,
             isPremium,
             profilePicture: profilePicture ? profilePicture : "default",
         });

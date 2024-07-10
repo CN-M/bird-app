@@ -4,12 +4,9 @@ import { prisma } from "../config/db";
 require("dotenv").config();
 
 export const getUser = async (req: Request, res: Response) => {
-  console.log("working");
   const { username } = req.params;
 
   try {
-    console.log("working");
-
     const user = await prisma.user.findFirst({
       where: { username },
       select: {
@@ -148,6 +145,7 @@ export const deleteUserAccount = async (req: Request, res: Response) => {
 
 export const followUser = async (req: Request, res: Response) => {
   const { user } = req;
+  console.log("Here is fine");
 
   if (!user) {
     return res
@@ -157,6 +155,7 @@ export const followUser = async (req: Request, res: Response) => {
 
   const { followingId } = req.body;
   const { id: userId } = user;
+  console.log("Here is OK");
 
   try {
     const followExists = await prisma.follower.findFirst({
@@ -173,6 +172,10 @@ export const followUser = async (req: Request, res: Response) => {
         following: { connect: { id: followingId } },
       },
     });
+
+    console.log(
+      `${user.profileName} is now following ${newFollow.followingId}`
+    );
 
     res.status(200).json(newFollow);
   } catch (err) {

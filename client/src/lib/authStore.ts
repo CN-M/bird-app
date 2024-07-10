@@ -12,13 +12,13 @@ interface AuthState {
   isLoading: boolean;
   user: User | null;
   errorMessage: string;
-  login: (userData: { email: string; password: string }) => void;
+  login: (userData: { username: string; password: string }) => void;
   loginAsGuest: () => void;
   logout: () => void;
   logoutGuest: () => void;
   register: (userData: {
-    firstName: string;
-    lastName: string;
+    username: string;
+    profileName: string;
     email: string;
     password: string;
   }) => void;
@@ -31,7 +31,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   isLoading: false,
   user: user ? user : null,
   errorMessage: "",
-  login: async (userData: { email: string; password: string }) => {
+  login: async (userData: { username: string; password: string }) => {
     set({ isLoading: true, isError: false, errorMessage: "" });
     try {
       const data: User = await login(userData);
@@ -58,7 +58,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ isLoading: true, isError: false, errorMessage: "" });
     try {
       const guestData = {
-        email: "batman@wayne.com",
+        username: "batman",
         password: "SUPERMANSUCKZ",
       };
 
@@ -83,8 +83,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   register: async (userData: {
-    firstName: string;
-    lastName: string;
+    username: string;
+    profileName: string;
     email: string;
     password: string;
   }) => {
@@ -155,8 +155,8 @@ export const useAuthStore = create<AuthState>((set) => ({
 }));
 
 const register = async (userData: {
-  firstName: string;
-  lastName: string;
+  username: string;
+  profileName: string;
   email: string;
   password: string;
 }) => {
@@ -175,7 +175,7 @@ const register = async (userData: {
   }
 };
 
-const login = async (userData: { email: string; password: string }) => {
+const login = async (userData: { username: string; password: string }) => {
   const response = await axios.post(
     "http://localhost:3000/account/login",
     userData,

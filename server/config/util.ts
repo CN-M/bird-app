@@ -9,7 +9,7 @@ type User = {
   profilePicture: string | null;
   username: string;
   isPremium: boolean;
-  email: string;
+  // email: string;
 };
 
 export const generateAccessToken = (user: User) => {

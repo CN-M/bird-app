@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Follow } from "../components/followBtn";
 import { SingleUserFeed } from "../components/singleUserFeed";
 import { UserComp } from "../components/user";
 import { rootURL } from "../lib/utils";
@@ -45,10 +46,12 @@ export const SingleUserPage = () => {
       ) : (
         <>
           {!user && <p>User does not exist</p>}
-          {user && (
+          {user && username && (
             <>
               <UserComp user={user} />
-              <SingleUserFeed userPosts={user.posts} />
+              <Follow followingId={user.id} />
+              {/* <SingleUserFeed userPosts={user.posts} /> */}
+              <SingleUserFeed username={username} />
             </>
           )}
         </>

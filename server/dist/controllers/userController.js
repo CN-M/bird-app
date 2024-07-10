@@ -4,10 +4,8 @@ exports.unfollowUser = exports.followUser = exports.deleteUserAccount = exports.
 const db_1 = require("../config/db");
 require("dotenv").config();
 const getUser = async (req, res) => {
-    console.log("working");
     const { username } = req.params;
     try {
-        console.log("working");
         const user = await db_1.prisma.user.findFirst({
             where: { username },
             select: {
@@ -132,6 +130,7 @@ const deleteUserAccount = async (req, res) => {
 exports.deleteUserAccount = deleteUserAccount;
 const followUser = async (req, res) => {
     const { user } = req;
+    console.log("Here is fine");
     if (!user) {
         return res
             .status(400)
@@ -139,6 +138,7 @@ const followUser = async (req, res) => {
     }
     const { followingId } = req.body;
     const { id: userId } = user;
+    console.log("Here is OK");
     try {
         const followExists = await db_1.prisma.follower.findFirst({
             where: { followerId: userId, followingId },
@@ -152,6 +152,7 @@ const followUser = async (req, res) => {
                 following: { connect: { id: followingId } },
             },
         });
+        console.log(`${user.profileName} is now following ${newFollow.followingId}`);
         res.status(200).json(newFollow);
     }
     catch (err) {

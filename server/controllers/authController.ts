@@ -1,4 +1,4 @@
-// import bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { prisma } from "../config/db";
@@ -46,7 +46,6 @@ export const registerUser = async (req: Request, res: Response) => {
         id,
         username,
         profileName,
-        email,
         isPremium,
         profilePicture: profilePicture ? profilePicture : "default",
       });
@@ -55,7 +54,6 @@ export const registerUser = async (req: Request, res: Response) => {
         id,
         username,
         profileName,
-        email,
         isPremium,
         profilePicture: profilePicture ? profilePicture : "default",
       });
@@ -86,40 +84,39 @@ export const registerUser = async (req: Request, res: Response) => {
 
 export const loginUser = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
+    console.log(req.body);
 
-    if (!email || !password) {
+    if (!username || !password) {
       return res.status(400).json({ error: "Please fill in all fields" });
     }
 
     const user = await prisma.user.findFirst({
-      where: { email },
+      where: { username },
     });
 
     if (!user) {
       return res.status(400).json({ error: "Invalid credentials" });
     }
 
-    // const passwordMatch = await bcrypt.compare(password, user.password!);
-    const passwordMatch = password === user.password;
+    const passwordMatch = await bcrypt.compare(password, user.password!);
     if (!passwordMatch) {
       return res.status(400).json({ error: "Invalid credentials" });
     }
 
     const {
       id,
-      username,
+      username: userUsername,
       profileName,
       profilePicture,
       isPremium,
-      email: userEmail,
+      email,
     } = user;
 
     const accessToken = generateAccessToken({
       id,
-      username,
+      username: userUsername,
       profileName,
-      email,
       isPremium,
       profilePicture: profilePicture ? profilePicture : "default",
     });
@@ -128,7 +125,6 @@ export const loginUser = async (req: Request, res: Response) => {
       id,
       username,
       profileName,
-      email,
       isPremium,
       profilePicture: profilePicture ? profilePicture : "default",
     });

@@ -14,6 +14,8 @@ export interface User {
   isPremium: boolean;
   accessToken: string;
   timestamp: number;
+  following: User[];
+  followers: User[];
 }
 
 export type Post = {
