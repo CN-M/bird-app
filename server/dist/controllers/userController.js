@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unfollowUser = exports.followUser = exports.deleteUserAccount = exports.downgradeUser = exports.upgradeUser = exports.editUserProfile = exports.getUser = void 0;
+exports.unfollowUser = exports.followUser = exports.getFollowRelationship = exports.deleteUserAccount = exports.downgradeUser = exports.upgradeUser = exports.editUserProfile = exports.getUser = void 0;
 const db_1 = require("../config/db");
 require("dotenv").config();
 const getUser = async (req, res) => {
@@ -148,9 +148,48 @@ const deleteUserAccount = async (req, res) => {
     }
 };
 exports.deleteUserAccount = deleteUserAccount;
+const getFollowRelationship = async (req, res) => {
+    console.log("Working 1");
+    const { user } = req;
+    if (!user) {
+        return res
+            .status(400)
+            .json({ error: "Not authoriized, please login or register" });
+    }
+    const { followingId } = req.body;
+    console.log("Working 2");
+    console.log(followingId);
+    if (!followingId) {
+        return res.status(400).json({ error: "Following ID is required" });
+    }
+    const { id: userId } = user;
+    try {
+        const followExists = await db_1.prisma.follower.findFirst({
+            where: { followerId: userId, followingId },
+        });
+        console.log(followExists);
+        if (!followExists) {
+            return res.status(200).json({
+                following: false,
+                message: `${user.profileName} is not following ${followingId}`,
+            });
+        }
+        else {
+            return res.status(200).json({
+                following: true,
+                message: `${user.profileName} is following ${followingId}`,
+                followData: followExists,
+            });
+        }
+    }
+    catch (err) {
+        console.error("Error following user", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+exports.getFollowRelationship = getFollowRelationship;
 const followUser = async (req, res) => {
     const { user } = req;
-    console.log("Here is fine");
     if (!user) {
         return res
             .status(400)
@@ -158,7 +197,6 @@ const followUser = async (req, res) => {
     }
     const { followingId } = req.body;
     const { id: userId } = user;
-    console.log("Here is OK");
     try {
         const followExists = await db_1.prisma.follower.findFirst({
             where: { followerId: userId, followingId },
@@ -201,9 +239,8 @@ const unfollowUser = async (req, res) => {
         const deletedFollow = await db_1.prisma.follower.delete({
             where: { id },
         });
-        res
-            .status(200)
-            .json({ message: "User successfully unfollwoed", follow: deletedFollow });
+        console.log(`${user.profileName} is no longer following ${deletedFollow.followingId}`);
+        res.status(200).json(deletedFollow);
     }
     catch (err) {
         console.error("Error unfollowing user ", err);

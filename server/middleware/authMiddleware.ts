@@ -45,6 +45,7 @@ export const protect = async (
   console.log(refreshToken);
 
   if (!accessToken || !refreshToken) {
+    // if (!accessToken) {
     return res.status(401).json({ error: "Not authorized, no tokens" });
   }
 

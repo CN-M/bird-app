@@ -1,18 +1,18 @@
 Auth:
-- [ ] Register
-- [ ] Login
+- [X] Register
+- [x] Login
 - [ ] Login As Guest
-- [ ] Logout
+- [X] Logout
 - [ ] Logout As Guest
 
 Post & Comments:
-- [ ] View general tweets
-- [ ] View feed tweets
+- [X] View general tweets
+- [X] View feed tweets
 - [ ] Post tweets (capped limit)
-- [ ] Delete tweets
+- [X] Delete tweets
 - [ ] Edit tweets (premium)
 - [ ] Write long tweets (premium)
-- [ ] Like tweets
+- [X] Like tweets
 - [ ] Bookmark tweets (premium) (nice to have)
 - [ ] Comments tweets
 - [ ] Comments get likes
@@ -20,8 +20,8 @@ Post & Comments:
 
 Users:
 - [ ] Edit profile
-- [ ] Follow
-- [ ] Unfollow
+- [X] Follow
+- [X] Unfollow
 
 *Chat comes later*
 *Premium comes later*

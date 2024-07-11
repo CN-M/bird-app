@@ -7,6 +7,16 @@ export const getPostComments = async (req: Request, res: Response) => {
   try {
     const comments = await prisma.comment.findFirst({
       where: { postId },
+      select: {
+        author: true,
+        content: true,
+        id: true,
+        postId: true,
+        createdAt: true,
+        parentCommentId: true,
+        authorId: true,
+        likes: true,
+      },
     });
 
     if (!comments) {

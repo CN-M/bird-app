@@ -163,9 +163,53 @@ export const deleteUserAccount = async (req: Request, res: Response) => {
   }
 };
 
+export const getFollowRelationship = async (req: Request, res: Response) => {
+  console.log("Working 1");
+  const { user } = req;
+
+  if (!user) {
+    return res
+      .status(400)
+      .json({ error: "Not authoriized, please login or register" });
+  }
+
+  const { followingId } = req.body;
+  console.log("Working 2");
+  console.log(followingId);
+
+  if (!followingId) {
+    return res.status(400).json({ error: "Following ID is required" });
+  }
+
+  const { id: userId } = user;
+
+  try {
+    const followExists = await prisma.follower.findFirst({
+      where: { followerId: userId, followingId },
+    });
+
+    console.log(followExists);
+
+    if (!followExists) {
+      return res.status(200).json({
+        following: false,
+        message: `${user.profileName} is not following ${followingId}`,
+      });
+    } else {
+      return res.status(200).json({
+        following: true,
+        message: `${user.profileName} is following ${followingId}`,
+        followData: followExists,
+      });
+    }
+  } catch (err) {
+    console.error("Error following user", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 export const followUser = async (req: Request, res: Response) => {
   const { user } = req;
-  console.log("Here is fine");
 
   if (!user) {
     return res
@@ -175,7 +219,6 @@ export const followUser = async (req: Request, res: Response) => {
 
   const { followingId } = req.body;
   const { id: userId } = user;
-  console.log("Here is OK");
 
   try {
     const followExists = await prisma.follower.findFirst({
@@ -231,9 +274,11 @@ export const unfollowUser = async (req: Request, res: Response) => {
       where: { id },
     });
 
-    res
-      .status(200)
-      .json({ message: "User successfully unfollwoed", follow: deletedFollow });
+    console.log(
+      `${user.profileName} is no longer following ${deletedFollow.followingId}`
+    );
+
+    res.status(200).json(deletedFollow);
   } catch (err) {
     console.error("Error unfollowing user ", err);
     res.status(500).json({ error: "Internal server error" });

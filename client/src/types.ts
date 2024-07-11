@@ -56,3 +56,12 @@ export type Like = {
   commentId?: string;
   createdAt: number;
 };
+
+export type Follow = {
+  id: string;
+  follower: User;
+  following: User;
+  followerId: string;
+  followingId: string;
+  createdAt: number;
+};

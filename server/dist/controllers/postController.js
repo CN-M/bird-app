@@ -6,7 +6,7 @@ const db_1 = require("../config/db");
 const getGeneralFeed = async (req, res) => {
     try {
         const posts = await db_1.prisma.post.findMany({
-            take: 10,
+            // take: 10,
             select: {
                 author: {
                     select: {
@@ -19,7 +19,7 @@ const getGeneralFeed = async (req, res) => {
                 },
                 comments: {
                     select: {
-                        author: { select: { username: true } },
+                        author: { select: { username: true, profilePicture: true } },
                         content: true,
                         id: true,
                         parentCommentId: true,
@@ -54,13 +54,47 @@ const getFollowingFeed = async (req, res) => {
     const { id: userId } = user;
     try {
         const following = await db_1.prisma.follower.findMany({
-            where: { followingId: userId },
+            // where: { followingId: userId },
+            where: { followerId: userId },
             select: { followingId: true },
         });
         if (!following || following.length === 0) {
-            return res.status(400).json({ error: "User not following anyone" });
+            // return res.status(400).json();
+            return res.status(200).json({ message: "User not following anyone" });
         }
         const followingIds = following.map((user) => user.followingId);
+        const userPosts = await db_1.prisma.post.findMany({
+            where: {
+                authorId: userId,
+            },
+            select: {
+                author: {
+                    select: {
+                        id: true,
+                        profileName: true,
+                        isPremium: true,
+                        profilePicture: true,
+                        username: true,
+                    },
+                },
+                comments: {
+                    select: {
+                        author: { select: { username: true, profilePicture: true } },
+                        content: true,
+                        id: true,
+                        parentCommentId: true,
+                        likes: true,
+                        createdAt: true,
+                        postId: true,
+                        replies: true,
+                    },
+                },
+                content: true,
+                likes: true,
+                createdAt: true,
+                id: true,
+            },
+        });
         const posts = await db_1.prisma.post.findMany({
             where: {
                 author: {
@@ -79,7 +113,7 @@ const getFollowingFeed = async (req, res) => {
                 },
                 comments: {
                     select: {
-                        author: { select: { username: true } },
+                        author: { select: { username: true, profilePicture: true } },
                         content: true,
                         id: true,
                         parentCommentId: true,
@@ -95,7 +129,7 @@ const getFollowingFeed = async (req, res) => {
                 id: true,
             },
         });
-        res.status(200).json(posts);
+        res.status(200).json([...userPosts, ...posts]);
     }
     catch (err) {
         console.error("Error fetching posts:", err);
@@ -122,7 +156,7 @@ const getSingleUserFeed = async (req, res) => {
                 },
                 comments: {
                     select: {
-                        author: { select: { username: true } },
+                        author: { select: { username: true, profilePicture: true } },
                         content: true,
                         id: true,
                         parentCommentId: true,
@@ -163,7 +197,7 @@ const getSinglePost = async (req, res) => {
                 },
                 comments: {
                     select: {
-                        author: { select: { username: true } },
+                        author: { select: { username: true, profilePicture: true } },
                         content: true,
                         id: true,
                         parentCommentId: true,

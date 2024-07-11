@@ -7,6 +7,16 @@ const getPostComments = async (req, res) => {
     try {
         const comments = await db_1.prisma.comment.findFirst({
             where: { postId },
+            select: {
+                author: true,
+                content: true,
+                id: true,
+                postId: true,
+                createdAt: true,
+                parentCommentId: true,
+                authorId: true,
+                likes: true,
+            },
         });
         if (!comments) {
             return res

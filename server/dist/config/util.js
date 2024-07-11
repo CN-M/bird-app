@@ -8,7 +8,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 require("dotenv").config();
 const { SECRET, REFRESH_SECRET } = process.env;
 const generateAccessToken = (user) => {
-    return jsonwebtoken_1.default.sign(user, SECRET, { expiresIn: "10" });
+    return jsonwebtoken_1.default.sign(user, SECRET, { expiresIn: "1h" });
 };
 exports.generateAccessToken = generateAccessToken;
 const generateRefreshToken = (user) => {

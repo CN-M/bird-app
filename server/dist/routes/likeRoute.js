@@ -8,12 +8,12 @@ const router = express_1.default.Router();
 const likeController_1 = require("../controllers/likeController");
 const authMiddleware_1 = require("../middleware/authMiddleware");
 router
-    .route("/:postId")
-    .get(likeController_1.getPostLikes)
+    .route("/:postId/post")
     .post(authMiddleware_1.protect, likeController_1.likePost)
+    .get(likeController_1.getPostLikes)
     .delete(authMiddleware_1.protect, likeController_1.unlikePost);
 router
-    .route("/:postId/:commentId")
+    .route("/:commentId/comment")
     .get(likeController_1.getCommentLikes)
     .post(authMiddleware_1.protect, likeController_1.likeComment)
     .delete(authMiddleware_1.protect, likeController_1.unlikeComment);

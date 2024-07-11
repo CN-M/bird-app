@@ -5,7 +5,7 @@ import { prisma } from "../config/db";
 export const getGeneralFeed = async (req: Request, res: Response) => {
   try {
     const posts = await prisma.post.findMany({
-      take: 10,
+      // take: 10,
       select: {
         author: {
           select: {
@@ -18,7 +18,7 @@ export const getGeneralFeed = async (req: Request, res: Response) => {
         },
         comments: {
           select: {
-            author: { select: { username: true } },
+            author: { select: { username: true, profilePicture: true } },
             content: true,
             id: true,
             parentCommentId: true,
@@ -56,15 +56,51 @@ export const getFollowingFeed = async (req: Request, res: Response) => {
 
   try {
     const following = await prisma.follower.findMany({
-      where: { followingId: userId },
+      // where: { followingId: userId },
+      where: { followerId: userId },
       select: { followingId: true },
     });
 
     if (!following || following.length === 0) {
-      return res.status(400).json({ error: "User not following anyone" });
+      // return res.status(400).json();
+      return res.status(200).json({ message: "User not following anyone" });
     }
 
     const followingIds = following.map((user) => user.followingId);
+
+    const userPosts = await prisma.post.findMany({
+      where: {
+        authorId: userId,
+      },
+      select: {
+        author: {
+          select: {
+            id: true,
+            profileName: true,
+            isPremium: true,
+            profilePicture: true,
+            username: true,
+          },
+        },
+        comments: {
+          select: {
+            author: { select: { username: true, profilePicture: true } },
+            content: true,
+            id: true,
+            parentCommentId: true,
+            likes: true,
+            createdAt: true,
+            postId: true,
+            replies: true,
+          },
+        },
+
+        content: true,
+        likes: true,
+        createdAt: true,
+        id: true,
+      },
+    });
 
     const posts = await prisma.post.findMany({
       where: {
@@ -84,7 +120,7 @@ export const getFollowingFeed = async (req: Request, res: Response) => {
         },
         comments: {
           select: {
-            author: { select: { username: true } },
+            author: { select: { username: true, profilePicture: true } },
             content: true,
             id: true,
             parentCommentId: true,
@@ -102,7 +138,7 @@ export const getFollowingFeed = async (req: Request, res: Response) => {
       },
     });
 
-    res.status(200).json(posts);
+    res.status(200).json([...userPosts, ...posts]);
   } catch (err) {
     console.error("Error fetching posts:", err);
     res.status(500).json({ error: "Internal server error." });
@@ -130,7 +166,7 @@ export const getSingleUserFeed = async (req: Request, res: Response) => {
 
         comments: {
           select: {
-            author: { select: { username: true } },
+            author: { select: { username: true, profilePicture: true } },
             content: true,
             id: true,
             parentCommentId: true,
@@ -172,7 +208,7 @@ export const getSinglePost = async (req: Request, res: Response) => {
         },
         comments: {
           select: {
-            author: { select: { username: true } },
+            author: { select: { username: true, profilePicture: true } },
             content: true,
             id: true,
             parentCommentId: true,

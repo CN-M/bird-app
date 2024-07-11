@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Follow } from "../components/followBtn";
+import { FollowComp } from "../components/followBtn";
 import { SingleUserFeed } from "../components/singleUserFeed";
 import { UserComp } from "../components/user";
 import { rootURL } from "../lib/utils";
@@ -20,8 +20,6 @@ export const SingleUser = () => {
   useEffect(() => {
     const getSingleUser = async () => {
       try {
-        console.log(username);
-
         const response = await axios.get(`${rootURL}/user/${username}`, {
           withCredentials: true,
         });
@@ -40,22 +38,27 @@ export const SingleUser = () => {
   }, []);
 
   return (
-    <>
+    <div className="p-5">
       {isLoading ? (
         <p>Loading user...</p>
       ) : (
         <>
-          {!user && <p>User does not exist</p>}
-          {user && username && (
+          {!user ? (
+            <p>User does not exist</p>
+          ) : (
             <>
               <UserComp user={user} />
-              <Follow followingId={user.id} />
-              {/* <SingleUserFeed userPosts={user.posts} /> */}
-              <SingleUserFeed username={username} />
+              <div className="mt-3">
+                <FollowComp followingId={user.id} />
+              </div>
+              <div className="mt-5">
+                {/* Fix this later */}
+                <SingleUserFeed username={username!} />
+              </div>
             </>
           )}
         </>
       )}
-    </>
+    </div>
   );
 };

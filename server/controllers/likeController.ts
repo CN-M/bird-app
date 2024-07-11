@@ -52,7 +52,8 @@ export const likePost = async (req: Request, res: Response) => {
       .json({ error: "Not authoriized, please login or register" });
   }
 
-  const { postId } = req.body;
+  // const { postId } = req.body;
+  const { postId } = req.params;
   const { id: userId } = user;
 
   try {
@@ -87,7 +88,8 @@ export const unlikePost = async (req: Request, res: Response) => {
       .json({ error: "Not authoriized, please login or register" });
   }
 
-  const { postId } = req.body;
+  // const { postId } = req.body;
+  const { postId } = req.params;
   const { id: userId } = user;
 
   try {
@@ -123,7 +125,8 @@ export const likeComment = async (req: Request, res: Response) => {
       .json({ error: "Not authoriized, please login or register" });
   }
 
-  const { commentId } = req.body;
+  // const { commentId } = req.body;
+  const { commentId } = req.params;
   const { id: userId } = user;
 
   try {
@@ -158,7 +161,8 @@ export const unlikeComment = async (req: Request, res: Response) => {
       .json({ error: "Not authoriized, please login or register" });
   }
 
-  const { commentId } = req.body;
+  // const { commentId } = req.body;
+  const { commentId } = req.params;
   const { id: userId } = user;
 
   try {

@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { rootURL } from "../lib/utils";
 import { Post } from "../types";
+import { CommentComp } from "./comment";
 import { Tweet } from "./tweet";
 
 export const SinglePostComponent = ({
@@ -39,15 +40,23 @@ export const SinglePostComponent = ({
     getSinglePost();
   }, []);
   return (
-    <>
+    <div className="p-5">
       {isLoading ? (
         <p>Loading post...</p>
       ) : (
         <>
-          {!post && <p>User does not exist</p>}
-          {post && <Tweet post={post} />}
+          {!post ? (
+            <p>Post does not exist</p>
+          ) : (
+            <>
+              <Tweet post={post} />
+              <div className="mt-5">
+                <CommentComp comments={post.comments} />
+              </div>
+            </>
+          )}
         </>
       )}
-    </>
+    </div>
   );
 };

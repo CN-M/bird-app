@@ -40,6 +40,7 @@ const protect = async (req, res, next) => {
     console.log(accessToken);
     console.log(refreshToken);
     if (!accessToken || !refreshToken) {
+        // if (!accessToken) {
         return res.status(401).json({ error: "Not authorized, no tokens" });
     }
     try {

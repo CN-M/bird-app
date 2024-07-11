@@ -13,13 +13,13 @@ import {
 import { protect } from "../middleware/authMiddleware";
 
 router
-  .route("/:postId")
-  .get(getPostLikes)
+  .route("/:postId/post")
   .post(protect, likePost)
+  .get(getPostLikes)
   .delete(protect, unlikePost);
 
 router
-  .route("/:postId/:commentId")
+  .route("/:commentId/comment")
   .get(getCommentLikes)
   .post(protect, likeComment)
   .delete(protect, unlikeComment);

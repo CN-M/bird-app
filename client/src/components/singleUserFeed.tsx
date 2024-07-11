@@ -19,7 +19,6 @@ export const SingleUserFeed = ({ username }: { username: string }) => {
         const { data } = response;
 
         setFeedPosts(data);
-        console.log(data);
 
         setIsLoading(false);
       } catch (err) {
@@ -31,8 +30,8 @@ export const SingleUserFeed = ({ username }: { username: string }) => {
     getSingleUserFeed();
   }, []);
   return (
-    <div className="flex flex-col w-full h-full items-center">
-      <p>Posts By User Feed</p>
+    <div className="flex flex-col w-full h-full">
+      <h2 className="text-xl font-bold mb-4">@{username}'s Posts</h2>
       {isLoading ? (
         <p>Loading posts...</p>
       ) : (

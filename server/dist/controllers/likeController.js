@@ -47,7 +47,8 @@ const likePost = async (req, res) => {
             .status(400)
             .json({ error: "Not authoriized, please login or register" });
     }
-    const { postId } = req.body;
+    // const { postId } = req.body;
+    const { postId } = req.params;
     const { id: userId } = user;
     try {
         const likeExists = await db_1.prisma.like.findFirst({
@@ -77,7 +78,8 @@ const unlikePost = async (req, res) => {
             .status(400)
             .json({ error: "Not authoriized, please login or register" });
     }
-    const { postId } = req.body;
+    // const { postId } = req.body;
+    const { postId } = req.params;
     const { id: userId } = user;
     try {
         const like = await db_1.prisma.like.findFirst({
@@ -107,7 +109,8 @@ const likeComment = async (req, res) => {
             .status(400)
             .json({ error: "Not authoriized, please login or register" });
     }
-    const { commentId } = req.body;
+    // const { commentId } = req.body;
+    const { commentId } = req.params;
     const { id: userId } = user;
     try {
         const likeExists = await db_1.prisma.like.findFirst({
@@ -137,7 +140,8 @@ const unlikeComment = async (req, res) => {
             .status(400)
             .json({ error: "Not authoriized, please login or register" });
     }
-    const { commentId } = req.body;
+    // const { commentId } = req.body;
+    const { commentId } = req.params;
     const { id: userId } = user;
     try {
         const like = await db_1.prisma.like.findFirst({

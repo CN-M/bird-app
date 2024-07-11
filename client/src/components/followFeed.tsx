@@ -18,7 +18,6 @@ export const FollowFeed = () => {
         const { data } = response;
 
         setFeedPosts(data);
-        console.log(data);
 
         setIsLoading(false);
       } catch (err) {
@@ -28,28 +27,22 @@ export const FollowFeed = () => {
     };
 
     getFollowFeed();
-  });
+  }, []);
 
   return (
     <>
       <p>Follow Feed</p>
-      {
-        isLoading ? (
-          <p>Loading posts...</p>
+      {isLoading ? (
+        <p>Loading posts...</p>
+      ) : (
+        <>
+          {feedPosts?.length < 1 ? (
+            <p>No posts to display</p>
           ) : (
-            <>
-          {
-            feedPosts?.length < 1 ? (
-              <p>No posts to display</p>
-            ) : (
-              feedPosts?.map((post) => (
-                <Tweet key={post.id} post={post} />
-              ))
-            )
-          }
-          </>
-        )
-      }
+            feedPosts?.map((post) => <Tweet key={post.id} post={post} />)
+          )}
+        </>
+      )}
     </>
   );
 };
