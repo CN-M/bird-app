@@ -96,6 +96,7 @@ export const Tweet = ({ post }: { post: Post }) => {
           {user?.id === authorId && (
             <span
               onClick={handleDelete}
+              aria-disabled={isLoading}
               className="flex items-center justify-center gap-1 hover:bg-gray-500/25 hover:text-gray-500 rounded-full px-2 cursor-pointer"
             >
               <FaTrash className="size-5" />

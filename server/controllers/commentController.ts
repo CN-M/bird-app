@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import { prisma } from "../config/db";
 
-export const getPostComments = async (req: Request, res: Response) => {
-  const { postId } = req.body;
+export const getSingleComment = async (req: Request, res: Response) => {
+  const { postId, commentId: id } = req.params;
 
   try {
     const comments = await prisma.comment.findFirst({
-      where: { postId },
+      where: { id, postId },
       select: {
         author: true,
         content: true,

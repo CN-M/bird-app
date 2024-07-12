@@ -6,7 +6,7 @@ import { rootURL } from "../lib/utils";
 import { Comment } from "../types";
 
 export const SingleComment = () => {
-  const { username, postId, commentId } = useParams();
+  const { postId, commentId } = useParams();
 
   const [comment, setComment] = useState<Comment>();
   const [isLoading, setIsLoading] = useState(true);

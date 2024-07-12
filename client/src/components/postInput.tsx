@@ -10,7 +10,10 @@ export const PostInput = () => {
 
   const user = useAuthStore((state) => state.user);
 
-  const handlePost = async () => {
+  // @ts-ignore
+  const handlePost = async (e) => {
+    e.preventDefault();
+
     setIsLoading(true);
     try {
       if (!user || !user.accessToken) {

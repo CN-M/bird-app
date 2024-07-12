@@ -9,7 +9,7 @@ const commentController_1 = require("../controllers/commentController");
 const authMiddleware_1 = require("../middleware/authMiddleware");
 router
     .route("/:postId/:commentId")
-    .get(commentController_1.getPostComments)
+    .get(commentController_1.getSingleComment)
     .put(authMiddleware_1.protect, commentController_1.updateComment)
     .delete(authMiddleware_1.protect, commentController_1.deleteComment);
 router

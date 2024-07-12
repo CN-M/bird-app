@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteComment = exports.updateComment = exports.createCommentReply = exports.createPostComment = exports.getCommentReplies = exports.getPostComments = void 0;
+exports.deleteComment = exports.updateComment = exports.createCommentReply = exports.createPostComment = exports.getCommentReplies = exports.getSingleComment = void 0;
 const db_1 = require("../config/db");
-const getPostComments = async (req, res) => {
-    const { postId } = req.body;
+const getSingleComment = async (req, res) => {
+    const { postId, commentId: id } = req.params;
     try {
         const comments = await db_1.prisma.comment.findFirst({
-            where: { postId },
+            where: { id, postId },
             select: {
                 author: true,
                 content: true,
@@ -30,7 +30,7 @@ const getPostComments = async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 };
-exports.getPostComments = getPostComments;
+exports.getSingleComment = getSingleComment;
 const getCommentReplies = async (req, res) => {
     const { commentId } = req.body;
     try {

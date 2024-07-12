@@ -16,6 +16,7 @@ export const SingleUser = () => {
 
   const [user, setUser] = useState<UserDetails>();
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("posts");
 
   useEffect(() => {
     const getSingleUser = async () => {
@@ -38,7 +39,7 @@ export const SingleUser = () => {
   }, []);
 
   return (
-    <div className="p-5">
+    <div className="border flex flex-col justify-start h-screen lg:w-1/4 md:w-1/2">
       {isLoading ? (
         <p>Loading user...</p>
       ) : (
@@ -47,13 +48,34 @@ export const SingleUser = () => {
             <p>User does not exist</p>
           ) : (
             <>
-              <UserComp user={user} />
-              <div className="mt-3">
+              <div className="p-5 flex justify-between border-b">
+                <UserComp user={user} />
                 <FollowComp followingId={user.id} />
               </div>
-              <div className="mt-5">
-                {/* Fix this later */}
-                <SingleUserFeed username={username!} />
+              <div className="flex flex-col h-full">
+                <div className="flex justify-around border-b">
+                  <button
+                    className={`p-4 transition-colors duration-300 ${activeTab === "posts" ? "border-b-2 border-blue-500 text-blue-500" : "hover:text-blue-500"}`}
+                    onClick={() => setActiveTab("posts")}
+                  >
+                    Posts
+                  </button>
+                  <button
+                    className={`p-4 transition-colors duration-300 ${activeTab === "likes" ? "border-b-2 border-blue-500 text-blue-500" : "hover:text-blue-500"}`}
+                    onClick={() => setActiveTab("likes")}
+                  >
+                    Likes
+                  </button>
+                </div>
+                <div className="p-4 flex-grow overflow-y-auto">
+                  {activeTab === "posts" && (
+                    <SingleUserFeed username={username!} />
+                  )}
+                  {/* Fix this later */}
+                  {activeTab === "likes" && (
+                    <SingleUserFeed username={username!} />
+                  )}
+                </div>
               </div>
             </>
           )}

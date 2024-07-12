@@ -40,7 +40,7 @@ export const SinglePostComponent = ({
     getSinglePost();
   }, []);
   return (
-    <div className="p-5">
+    <div className="border flex flex-col justify-start h-screen lg:w-1/4 md:w-1/2">
       {isLoading ? (
         <p>Loading post...</p>
       ) : (
@@ -50,7 +50,7 @@ export const SinglePostComponent = ({
           ) : (
             <>
               <Tweet post={post} />
-              <div className="mt-5">
+              <div className="p-4 flex-grow overflow-y-auto">
                 <CommentComp comments={post.comments} />
               </div>
             </>

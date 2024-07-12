@@ -32,6 +32,11 @@ export const UserFeed = () => {
 
     getUserFeed();
   }, []);
+
+  if (!user) {
+    return <p>Log in to see your feed</p>;
+  }
+
   return (
     <>
       {isLoading && user ? (

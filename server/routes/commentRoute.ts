@@ -3,21 +3,21 @@ import express from "express";
 const router = express.Router();
 
 import {
-    createCommentReply,
-    createPostComment,
-    deleteComment,
-    getCommentReplies,
-    getPostComments,
-    updateComment,
+  createCommentReply,
+  createPostComment,
+  deleteComment,
+  getCommentReplies,
+  getSingleComment,
+  updateComment,
 } from "../controllers/commentController";
 import { protect } from "../middleware/authMiddleware";
 
 router
   .route("/:postId/:commentId")
-  .get(getPostComments)
+  .get(getSingleComment)
   .put(protect, updateComment)
   .delete(protect, deleteComment);
-  
+
 router
   .route("/:postId/:commentId/:replyId")
   .get(getCommentReplies)

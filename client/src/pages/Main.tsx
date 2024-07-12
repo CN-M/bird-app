@@ -7,7 +7,7 @@ export const Main = () => {
   const [activeTab, setActiveTab] = useState("general");
 
   return (
-    <div className="border flex flex-col justify-between  h-screen lg:w-1/4 md:w-1/2">
+    <div className="border flex flex-col justify-between h-screen lg:w-1/4 md:w-1/2">
       <PostInput />
       <div className="flex flex-col h-full">
         <div className="flex justify-around border-b">
