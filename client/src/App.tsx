@@ -5,12 +5,12 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { Footer } from "./components/Footer";
 import { Navbar } from "./components/Navbar";
 import { Main } from "./pages/Main";
+import { SingleComment } from "./pages/SingleComment";
+import { SinglePost } from "./pages/SinglePost";
+import { SingleUser } from "./pages/SingleUser";
+import { UserProfile } from "./pages/UserProfile";
 import { Login } from "./pages/auth/Login";
 import { Register } from "./pages/auth/Register";
-import { SingleComment } from "./pages/singleComment";
-import { SinglePost } from "./pages/singlePost";
-import { SingleUser } from "./pages/singleUser";
-import { UserProfile } from "./pages/userProfile";
 
 function App() {
   return (
