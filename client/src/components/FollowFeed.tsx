@@ -1,22 +1,18 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useAuthStore } from "../lib/authStore";
 import { rootURL } from "../lib/utils";
 import { Post } from "../types";
-import { Tweet } from "./tweet";
+import { Tweet } from "./Tweet";
 
-export const UserFeed = () => {
+export const FollowFeed = () => {
   const [feedPosts, setFeedPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const user = useAuthStore((state) => state.user);
-
   useEffect(() => {
-    const getUserFeed = async () => {
+    const getFollowFeed = async () => {
       try {
         const response = await axios.get(`${rootURL}/posts/feed`, {
           withCredentials: true,
-          headers: { Authorization: `Bearer ${user?.accessToken}` },
         });
 
         const { data } = response;
@@ -30,23 +26,20 @@ export const UserFeed = () => {
       }
     };
 
-    getUserFeed();
+    getFollowFeed();
   }, []);
-
-  if (!user) {
-    return <p>Log in to see your feed</p>;
-  }
 
   return (
     <>
-      {isLoading && user ? (
+      <p>Follow Feed</p>
+      {isLoading ? (
         <p>Loading posts...</p>
       ) : (
         <>
           {feedPosts?.length < 1 ? (
             <p>No posts to display</p>
           ) : (
-            feedPosts.map((post) => <Tweet key={post.id} post={post} />)
+            feedPosts?.map((post) => <Tweet key={post.id} post={post} />)
           )}
         </>
       )}

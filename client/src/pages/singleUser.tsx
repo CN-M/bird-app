@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { FollowComp } from "../components/followBtn";
-import { SingleUserFeed } from "../components/singleUserFeed";
-import { UserComp } from "../components/user";
+import { FollowComp } from "../components/Follow";
+import { SingleUserFeed } from "../components/SingleUserFeed";
+import { UserComp } from "../components/User";
 import { rootURL } from "../lib/utils";
 import { Post, User } from "../types";
 

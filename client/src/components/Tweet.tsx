@@ -12,7 +12,7 @@ import { rootURL } from "../lib/utils";
 import { Post } from "../types";
 // import { CommentComp } from "./comment";
 // import { LikeComp } from "./like";
-import { UserComp } from "./user";
+import { UserComp } from "./User";
 
 export const Tweet = ({ post }: { post: Post }) => {
   const [isLoading, setIsLoading] = useState(false);

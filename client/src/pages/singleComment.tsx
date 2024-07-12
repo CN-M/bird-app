@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { CommentComp } from "../components/comment";
+import { CommentComp } from "../components/Comment";
 import { rootURL } from "../lib/utils";
 import { Comment } from "../types";
 
@@ -35,9 +35,9 @@ export const SingleComment = () => {
   }, []);
 
   return (
-    <>
+    <div className="border flex flex-col justify-start h-screen lg:w-1/4 md:w-1/2">
       {isLoading ? (
-        <p>Loading user...</p>
+        <p>Loading comment...</p>
       ) : (
         <>
           {!comment && <p>Comment does not exist</p>}
@@ -48,6 +48,6 @@ export const SingleComment = () => {
           )}
         </>
       )}
-    </>
+    </div>
   );
 };

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { GeneralFeed } from "../components/generalFeed";
-import { PostInput } from "../components/postInput";
-import { UserFeed } from "../components/userFeed";
+import { GeneralFeed } from "../components/GeneralFeed";
+import { PostInput } from "../components/PostInput";
+import { UserFeed } from "../components/UserFeed";
 
 export const Main = () => {
   const [activeTab, setActiveTab] = useState("general");

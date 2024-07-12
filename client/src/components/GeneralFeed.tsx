@@ -1,18 +1,17 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { rootURL } from "../lib/utils";
-import { Tweet } from "./tweet";
-
 import { Post } from "../types";
+import { Tweet } from "./Tweet";
 
-export const SingleUserFeed = ({ username }: { username: string }) => {
+export const GeneralFeed = () => {
   const [feedPosts, setFeedPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const getSingleUserFeed = async () => {
+    const getGeneralFeed = async () => {
       try {
-        const response = await axios.get(`${rootURL}/posts/${username}/feed`, {
+        const response = await axios.get(`${rootURL}/posts`, {
           withCredentials: true,
         });
 
@@ -27,22 +26,21 @@ export const SingleUserFeed = ({ username }: { username: string }) => {
       }
     };
 
-    getSingleUserFeed();
+    getGeneralFeed();
   }, []);
   return (
-    <div className="flex flex-col w-full h-full">
-      <h2 className="text-xl font-bold mb-4">@{username}'s Posts</h2>
+    <>
       {isLoading ? (
         <p>Loading posts...</p>
       ) : (
         <>
-          {feedPosts?.length < 1 ? (
+          {feedPosts.length < 1 ? (
             <p>No posts to display</p>
           ) : (
-            feedPosts?.map((post) => <Tweet key={post.id} post={post} />)
+            feedPosts.map((post) => <Tweet key={post.id} post={post} />)
           )}
         </>
       )}
-    </div>
+    </>
   );
 };
