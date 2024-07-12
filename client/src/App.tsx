@@ -7,6 +7,7 @@ import { Navbar } from "./components/Navbar";
 import { Main } from "./pages/Main";
 import { SingleComment } from "./pages/SingleComment";
 import { SinglePost } from "./pages/SinglePost";
+import { SingleReply } from "./pages/SingleReply";
 import { SingleUser } from "./pages/SingleUser";
 import { UserProfile } from "./pages/UserProfile";
 import { Login } from "./pages/auth/Login";
@@ -27,6 +28,10 @@ function App() {
             <Route
               path="/comment/:postId/:commentId"
               element={<SingleComment />}
+            />
+            <Route
+              path="/reply/:postId/:commentId/:replyId"
+              element={<SingleReply />}
             />
             <Route path="/:username/profile" element={<UserProfile />} />
           </Routes>

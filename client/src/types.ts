@@ -1,11 +1,4 @@
-export type Todo = {
-  id: number;
-  task: string;
-  completed?: boolean;
-  // email: string;
-};
-
-export type User = {
+export type UserType = {
   id: string;
   username: string;
   email: string;
@@ -13,54 +6,54 @@ export type User = {
   profilePicture: string;
   isPremium: boolean;
   accessToken: string;
-  posts: Post[];
+  posts: PostType[];
   timestamp: number;
-  likes: Like[];
-  followers: User[];
-  following: User[];
+  likes: LikeType[];
+  followers: UserType[];
+  following: UserType[];
 };
 
-export type Post = {
+export type PostType = {
   id: string;
   content: string;
-  author: User;
+  author: UserType;
   authorId: string;
-  likes: Like[];
-  comments: Comment[];
+  likes: LikeType[];
+  comments: CommentType[];
   createdAt: number;
   updatedAT: number;
 };
 
-export type Comment = {
+export type CommentType = {
   id: string;
   content: string;
-  author: User;
-  post: Post;
+  author: UserType;
+  post: PostType;
   postId: string;
   authorId: string;
   createdAt: number;
   updatedAT: number;
-  likes: Like[];
-  parentComment?: Comment[];
+  likes: LikeType[];
+  parentComment?: CommentType[];
   parentCommentId?: string;
-  replies: Comment[];
+  replies: CommentType[];
 };
 
-export type Like = {
+export type LikeType = {
   id: string;
-  user: User;
+  user: UserType;
   userId: string;
-  post?: Post;
+  post?: PostType;
   postId?: string;
-  comment?: Comment;
+  comment?: CommentType;
   commentId?: string;
   createdAt: number;
 };
 
-export type Follow = {
+export type FollowType = {
   id: string;
-  follower: User;
-  following: User;
+  follower: UserType;
+  following: UserType;
   followerId: string;
   followingId: string;
   createdAt: number;

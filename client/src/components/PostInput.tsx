@@ -49,7 +49,7 @@ export const PostInput = () => {
           onChange={handleChange}
           value={content}
           placeholder="What's on your mind?"
-          className="border-2 border-emerald-500 rounded-md w-full h-20 p-2 focus:border-blue-500 focus:outline-none focus:ring-0"
+          className="border-2 resize-none border-emerald-500 rounded-md w-full h-20 p-2 focus:border-blue-500 focus:outline-none focus:ring-0"
           minLength={1}
           maxLength={280}
           required

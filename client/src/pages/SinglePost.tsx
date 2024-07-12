@@ -1,15 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { CommentComp } from "../components/Comment";
-import { Tweet } from "../components/Tweet";
+import { Comment } from "../components/Comment";
+import { Post } from "../components/Post";
+import { ReplyInput } from "../components/ReplyInput";
 import { rootURL } from "../lib/utils";
-import { Post } from "../types";
+import { PostType } from "../types";
 
 export const SinglePost = () => {
   const { username, postId } = useParams();
 
-  const [post, setPost] = useState<Post>();
+  const [post, setPost] = useState<PostType>();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -23,9 +24,7 @@ export const SinglePost = () => {
         );
 
         const { data } = response;
-
         setPost(data);
-        console.log(data);
 
         setIsLoading(false);
       } catch (err) {
@@ -46,9 +45,10 @@ export const SinglePost = () => {
             <p>Post does not exist</p>
           ) : (
             <>
-              <Tweet post={post} />
-              <div className="p-4 flex-grow overflow-y-auto">
-                <CommentComp comments={post.comments} />
+              <Post post={post} />
+              <ReplyInput postId={post.id} />
+              <div className="flex-grow overflow-y-auto">
+                <Comment replies={false} comments={post.comments} />
               </div>
             </>
           )}

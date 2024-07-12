@@ -24,7 +24,7 @@ router
   .put(protect, updateComment)
   .delete(protect, deleteComment);
 
-router.route("/comment").post(createPostComment);
-router.route("/reply").post(createCommentReply);
+router.route("/comment").post(protect, createPostComment);
+router.route("/reply").post(protect, createCommentReply);
 
 export default router;

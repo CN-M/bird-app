@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { rootURL } from "../lib/utils";
-import { Post } from "../types";
-import { Tweet } from "./Tweet";
+import { PostType } from "../types";
+import { Post } from "./Post";
 
 export const GeneralFeed = () => {
-  const [feedPosts, setFeedPosts] = useState<Post[]>([]);
+  const [feedPosts, setFeedPosts] = useState<PostType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -35,9 +35,9 @@ export const GeneralFeed = () => {
       ) : (
         <>
           {feedPosts.length < 1 ? (
-            <p>No posts to display</p>
+            <p>No one has posted anything</p>
           ) : (
-            feedPosts.map((post) => <Tweet key={post.id} post={post} />)
+            feedPosts.map((post) => <Post key={post.id} post={post} />)
           )}
         </>
       )}

@@ -6,7 +6,7 @@ import { ReplyInput } from "../components/ReplyInput";
 import { rootURL } from "../lib/utils";
 import { CommentType } from "../types";
 
-export const SingleComment = () => {
+export const SingleReply = () => {
   const { postId, commentId, replyId } = useParams();
 
   let route: string;

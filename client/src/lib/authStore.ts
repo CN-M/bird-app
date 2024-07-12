@@ -1,7 +1,7 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import { create } from "zustand";
-import { User } from "../types";
+import { UserType } from "../types";
 import { rootURL } from "./utils";
 
 const user = JSON.parse(localStorage.getItem("user")!);
@@ -11,7 +11,7 @@ interface AuthState {
   isGuest: boolean;
   isError: boolean;
   isLoading: boolean;
-  user: User | null;
+  user: UserType | null;
   errorMessage: string;
   login: (userData: { username: string; password: string }) => void;
   loginAsGuest: () => void;
@@ -35,7 +35,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: async (userData: { username: string; password: string }) => {
     set({ isLoading: true, isError: false, errorMessage: "" });
     try {
-      const data: User = await login(userData);
+      const data: UserType = await login(userData);
       set({ isAuthenticated: true, user: data });
       toast.success("Successfully logged in!");
 
@@ -63,7 +63,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         password: "SUPERMANSUCKZ",
       };
 
-      const data: User = await login(guestData);
+      const data: UserType = await login(guestData);
       set({ isAuthenticated: true, user: data, isGuest: true });
       toast.success("Successfully logged in!");
 
@@ -91,7 +91,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   }) => {
     set({ isLoading: true, isError: false, errorMessage: "" });
     try {
-      const data: User = await register(userData);
+      const data: UserType = await register(userData);
       set({ isAuthenticated: true, user: data });
       toast.success("User successfully registered!");
 

@@ -2,11 +2,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../lib/authStore";
 import { rootURL } from "../lib/utils";
-import { Post } from "../types";
-import { Tweet } from "./Tweet";
+import { PostType } from "../types";
+import { Post } from "./Post";
 
 export const UserFeed = () => {
-  const [feedPosts, setFeedPosts] = useState<Post[]>([]);
+  const [feedPosts, setFeedPosts] = useState<PostType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const user = useAuthStore((state) => state.user);
@@ -44,9 +44,9 @@ export const UserFeed = () => {
       ) : (
         <>
           {feedPosts?.length < 1 ? (
-            <p>No posts to display</p>
+            <p>Start following people to see their posts!</p>
           ) : (
-            feedPosts.map((post) => <Tweet key={post.id} post={post} />)
+            feedPosts.map((post) => <Post key={post.id} post={post} />)
           )}
         </>
       )}

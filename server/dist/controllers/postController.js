@@ -60,7 +60,7 @@ const getFollowingFeed = async (req, res) => {
         });
         if (!following || following.length === 0) {
             // return res.status(400).json();
-            return res.status(200).json({ message: "User not following anyone" });
+            return res.status(200).json([]);
         }
         const followingIds = following.map((user) => user.followingId);
         const userPosts = await db_1.prisma.post.findMany({

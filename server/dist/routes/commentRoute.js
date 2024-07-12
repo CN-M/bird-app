@@ -17,6 +17,6 @@ router
     .get(commentController_1.getCommentReplies)
     .put(authMiddleware_1.protect, commentController_1.updateComment)
     .delete(authMiddleware_1.protect, commentController_1.deleteComment);
-router.route("/comment").post(commentController_1.createPostComment);
-router.route("/reply").post(commentController_1.createCommentReply);
+router.route("/comment").post(authMiddleware_1.protect, commentController_1.createPostComment);
+router.route("/reply").post(authMiddleware_1.protect, commentController_1.createCommentReply);
 exports.default = router;

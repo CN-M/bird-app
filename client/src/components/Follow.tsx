@@ -2,20 +2,19 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../lib/authStore";
 import { rootURL } from "../lib/utils";
-import { Follow } from "../types";
+import { FollowType } from "../types";
 
-type FollowRelationship = {
+type FollowRelationshipType = {
   following: boolean;
   message: string;
-  followData?: Follow;
+  followData?: FollowType;
 };
 
-export const FollowComp = ({ followingId }: { followingId: string }) => {
-  const [relationship, setRelationship] = useState<FollowRelationship>();
+export const Follow = ({ followingId }: { followingId: string }) => {
+  const [relationship, setRelationship] = useState<FollowRelationshipType>();
   const [isLoading, setIsLoading] = useState(false);
 
   const [following, setFollowing] = useState(relationship?.following);
-  console.log(following);
 
   const user = useAuthStore((state) => state.user);
 
@@ -31,7 +30,7 @@ export const FollowComp = ({ followingId }: { followingId: string }) => {
           }
         );
 
-        const { data }: { data: FollowRelationship } = response;
+        const { data }: { data: FollowRelationshipType } = response;
 
         setRelationship(data);
         setFollowing(data.following);

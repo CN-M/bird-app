@@ -8,7 +8,15 @@ const getSingleComment = async (req, res) => {
         const comments = await db_1.prisma.comment.findFirst({
             where: { id, postId },
             select: {
-                author: true,
+                author: {
+                    select: {
+                        username: true,
+                        profileName: true,
+                        profilePicture: true,
+                        id: true,
+                        isPremium: true,
+                    },
+                },
                 content: true,
                 id: true,
                 postId: true,
@@ -16,6 +24,27 @@ const getSingleComment = async (req, res) => {
                 parentCommentId: true,
                 authorId: true,
                 likes: true,
+                replies: {
+                    select: {
+                        author: {
+                            select: {
+                                username: true,
+                                profileName: true,
+                                profilePicture: true,
+                                id: true,
+                                isPremium: true,
+                            },
+                        },
+                        content: true,
+                        parentCommentId: true,
+                        authorId: true,
+                        createdAt: true,
+                        likes: true,
+                        replies: true,
+                        postId: true,
+                        id: true,
+                    },
+                },
             },
         });
         if (!comments) {
@@ -32,10 +61,49 @@ const getSingleComment = async (req, res) => {
 };
 exports.getSingleComment = getSingleComment;
 const getCommentReplies = async (req, res) => {
-    const { commentId } = req.body;
+    const { postId, commentId, replyId } = req.params;
     try {
         const comments = await db_1.prisma.comment.findFirst({
-            where: { parentCommentId: commentId },
+            where: { postId, parentCommentId: commentId, id: replyId },
+            select: {
+                author: {
+                    select: {
+                        username: true,
+                        profileName: true,
+                        profilePicture: true,
+                        id: true,
+                        isPremium: true,
+                    },
+                },
+                content: true,
+                id: true,
+                postId: true,
+                createdAt: true,
+                parentCommentId: true,
+                authorId: true,
+                likes: true,
+                replies: {
+                    select: {
+                        author: {
+                            select: {
+                                username: true,
+                                profileName: true,
+                                profilePicture: true,
+                                id: true,
+                                isPremium: true,
+                            },
+                        },
+                        content: true,
+                        parentCommentId: true,
+                        authorId: true,
+                        createdAt: true,
+                        likes: true,
+                        replies: true,
+                        postId: true,
+                        id: true,
+                    },
+                },
+            },
         });
         if (!comments) {
             return res
@@ -51,12 +119,14 @@ const getCommentReplies = async (req, res) => {
 };
 exports.getCommentReplies = getCommentReplies;
 const createPostComment = async (req, res) => {
+    console.log("Here works 1");
     const { user } = req;
     if (!user) {
         return res
             .status(400)
             .json({ error: "Not authoriized, please login or register" });
     }
+    console.log("Here works 2");
     const { content, postId } = req.body;
     const { id: userId } = user;
     try {

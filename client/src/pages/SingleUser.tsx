@@ -1,20 +1,21 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { FollowComp } from "../components/Follow";
+import { Follow } from "../components/Follow";
 import { SingleUserFeed } from "../components/SingleUserFeed";
-import { UserComp } from "../components/User";
+import { User } from "../components/User";
 import { rootURL } from "../lib/utils";
-import { Post, User } from "../types";
+import { UserType } from "../types";
 
-interface UserDetails extends User {
-  posts: Post[];
-}
+// interface UserDetails extends UserType {
+//   posts: PostType[];
+// }
 
 export const SingleUser = () => {
   const { username } = useParams();
 
-  const [user, setUser] = useState<UserDetails>();
+  // const [user, setUser] = useState<UserDetails>();
+  const [user, setUser] = useState<UserType>();
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("posts");
 
@@ -49,8 +50,8 @@ export const SingleUser = () => {
           ) : (
             <>
               <div className="p-5 flex justify-between border-b">
-                <UserComp user={user} />
-                <FollowComp followingId={user.id} />
+                <User user={user} />
+                <Follow followingId={user.id} />
               </div>
               <div className="flex flex-col h-full">
                 <div className="flex justify-around border-b">

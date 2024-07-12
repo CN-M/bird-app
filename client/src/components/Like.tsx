@@ -2,16 +2,18 @@ import axios from "axios";
 import { useState } from "react";
 import { useAuthStore } from "../lib/authStore";
 import { rootURL } from "../lib/utils";
-import { Like } from "../types";
+import { LikeType } from "../types";
 
-export const LikeComp = ({
+import { FaRegHeart } from "react-icons/fa";
+
+export const Like = ({
   commentId,
   postId,
   likes,
 }: {
   commentId?: string;
   postId?: string;
-  likes: Like[];
+  likes: LikeType[];
 }) => {
   const user = useAuthStore((state) => state.user);
 
@@ -30,7 +32,10 @@ export const LikeComp = ({
   const [likeIsLoading, setLikeIsLoading] = useState(false);
   const [unlikeIsLoading, setUnlikeIsLoading] = useState(false);
 
-  const handleUnlike = async () => {
+  const handleUnlike = async (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>
+  ) => {
+    e.preventDefault();
     setUnlikeIsLoading(true);
     try {
       if (!user || !user.accessToken) {
@@ -50,7 +55,11 @@ export const LikeComp = ({
     }
   };
 
-  const handleLike = async () => {
+  const handleLike = async (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+
     setLikeIsLoading(true);
     try {
       if (!user || !user.accessToken) {
@@ -75,25 +84,26 @@ export const LikeComp = ({
   };
 
   return (
-    <div className="flex items-center space-x-2">
+    <>
       {liked ? (
-        <button
-          className="bg-red-500 rounded-lg px-3 py-1 text-white"
+        <span
           onClick={handleUnlike}
-          disabled={unlikeIsLoading}
+          aria-disabled={unlikeIsLoading}
+          className="flex items-center justify-center gap-1 text-red-500 hover:bg-red-500/25 hover: rounded-full px-2 cursor-pointer"
         >
-          {unlikeIsLoading ? "Unliking..." : "Unlike"}
-        </button>
+          {totalLikes}
+          <FaRegHeart className="size-5" />
+        </span>
       ) : (
-        <button
-          className="bg-indigo-500 rounded-lg px-3 py-1 text-white"
+        <span
           onClick={handleLike}
-          disabled={likeIsLoading}
+          aria-disabled={likeIsLoading}
+          className="flex items-center justify-center gap-1 hover:bg-red-500/25 hover:text-red-500 rounded-full px-2 cursor-pointer"
         >
-          {likeIsLoading ? "Liking..." : "Like"}
-        </button>
+          {totalLikes}
+          <FaRegHeart className="size-5" />
+        </span>
       )}
-      <p>{totalLikes} Likes</p>
-    </div>
+    </>
   );
 };

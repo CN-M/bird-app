@@ -17,13 +17,20 @@ export const AuthButton = () => {
   };
 
   return (
-    <div className="bg-emerald-500 rounded-lg px-5 py-2">
+    <div className="">
       {user && isAuthenticated ? (
-        <button className="" onClick={handleLogout} disabled={isLoading}>
+        <button
+          className="bg-emerald-500 rounded-lg px-5 py-2 text-white"
+          onClick={handleLogout}
+          disabled={isLoading}
+        >
           {isLoading ? "Logging Out..." : "Logout"}
         </button>
       ) : (
-        <button className="" onClick={() => navigate("/login")}>
+        <button
+          className="bg-emerald-500 rounded-lg px-5 py-2 text-white"
+          onClick={() => navigate("/login")}
+        >
           Login
         </button>
       )}
