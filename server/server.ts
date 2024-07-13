@@ -19,14 +19,17 @@ import likeRoute from "./routes/likeRoute";
 import postRoute from "./routes/postRoute";
 import userRoute from "./routes/userRoute";
 
-const { PORT, NODE_ENV } = process.env;
+const { PORT, NODE_ENV, CLIENT_ROOT_URL } = process.env;
 const port = PORT || 3000;
-const node_env = NODE_ENV || "development";
 
 const app: Express = express();
 app.set("trust proxy", 1);
 
-const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
+const allowedOrigins = [
+  CLIENT_ROOT_URL,
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+];
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minute
@@ -36,7 +39,7 @@ const limiter = rateLimit({
 });
 
 // Middleware
-// app.use(limiter);
+NODE_ENV !== "development" ? app.use(limiter) : null;
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(
@@ -51,6 +54,7 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(helmet());
 app.use(compression());
 app.use(express.json());
