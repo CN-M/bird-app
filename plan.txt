@@ -1,15 +1,15 @@
 Auth:
 - [X] Register
 - [x] Login
-- [ ] Login As Guest
+- [X] Login As Guest
 - [X] Logout
-- [ ] Logout As Guest
+- [X] Logout As Guest
 
 Post & Comments:
 - [X] View general tweets
 - [X] View feed tweets
 - [X] Post tweets 
-    [ ] (capped limit)
+    [X] (Raete limit)
 
 - [X] Delete tweets
 - [ ] Edit tweets (premium)

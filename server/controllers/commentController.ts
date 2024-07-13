@@ -122,7 +122,6 @@ export const getCommentReplies = async (req: Request, res: Response) => {
 };
 
 export const createPostComment = async (req: Request, res: Response) => {
-  console.log("Here works 1");
   const { user } = req;
 
   if (!user) {
@@ -130,8 +129,6 @@ export const createPostComment = async (req: Request, res: Response) => {
       .status(400)
       .json({ error: "Not authoriized, please login or register" });
   }
-
-  console.log("Here works 2");
 
   const { content, postId } = req.body;
   const { id: userId } = user;

@@ -60,7 +60,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const guestData = {
         username: "batman",
-        password: "SUPERMANSUCKZ",
+        password: "SUPERMAN-SUCKZ",
       };
 
       const data: UserType = await login(guestData);

@@ -8,6 +8,7 @@ import {
   editUserProfile,
   followUser,
   getFollowRelationship,
+  getFollowSuggestions,
   getUser,
   unfollowUser,
   upgradeUser,
@@ -18,6 +19,7 @@ router.route("/relationship").post(protect, getFollowRelationship);
 
 router.route("/follow").post(protect, followUser);
 router.route("/unfollow").delete(protect, unfollowUser);
+router.route("/suggestions").get(protect, getFollowSuggestions);
 
 router.route("/:username/edit").put(protect, editUserProfile);
 router.route("/:username/upgrade").put(protect, upgradeUser);

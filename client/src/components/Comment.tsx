@@ -21,12 +21,10 @@ export const Comment = ({
   comments: CommentType[];
 }) => {
   const user = useAuthStore((state) => state.user);
-  console.log(replies, comments);
 
   const navigate = useNavigate();
 
   const areTheseReplies = replies;
-  console.log(areTheseReplies);
 
   const [isLoading, setIsLoading] = useState(false);
 

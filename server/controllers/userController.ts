@@ -164,7 +164,6 @@ export const deleteUserAccount = async (req: Request, res: Response) => {
 };
 
 export const getFollowRelationship = async (req: Request, res: Response) => {
-  console.log("Working 1");
   const { user } = req;
 
   if (!user) {
@@ -174,8 +173,6 @@ export const getFollowRelationship = async (req: Request, res: Response) => {
   }
 
   const { followingId } = req.body;
-  console.log("Working 2");
-  console.log(followingId);
 
   if (!followingId) {
     return res.status(400).json({ error: "Following ID is required" });
@@ -187,8 +184,6 @@ export const getFollowRelationship = async (req: Request, res: Response) => {
     const followExists = await prisma.follower.findFirst({
       where: { followerId: userId, followingId },
     });
-
-    console.log(followExists);
 
     if (!followExists) {
       return res.status(200).json({
@@ -202,6 +197,46 @@ export const getFollowRelationship = async (req: Request, res: Response) => {
         followData: followExists,
       });
     }
+  } catch (err) {
+    console.error("Error following user", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getFollowSuggestions = async (req: Request, res: Response) => {
+  const { user } = req;
+
+  if (!user) {
+    return res
+      .status(400)
+      .json({ error: "Not authoriized, please login or register" });
+  }
+
+  const { id: userId } = user;
+
+  try {
+    const following = await prisma.follower.findMany({
+      where: { followerId: userId },
+      select: { followingId: true },
+    });
+
+    const followingIds = following.map((follower) => follower.followingId);
+
+    const suggestions = await prisma.user.findMany({
+      take: 5,
+      where: {
+        id: { notIn: followingIds, not: userId },
+      },
+      select: {
+        id: true,
+        isPremium: true,
+        profileName: true,
+        profilePicture: true,
+        username: true,
+      },
+    });
+
+    res.status(200).json(suggestions);
   } catch (err) {
     console.error("Error following user", err);
     res.status(500).json({ error: "Internal server error" });
@@ -236,10 +271,6 @@ export const followUser = async (req: Request, res: Response) => {
       },
     });
 
-    console.log(
-      `${user.profileName} is now following ${newFollow.followingId}`
-    );
-
     res.status(200).json(newFollow);
   } catch (err) {
     console.error("Error following user", err);
@@ -273,10 +304,6 @@ export const unfollowUser = async (req: Request, res: Response) => {
     const deletedFollow = await prisma.follower.delete({
       where: { id },
     });
-
-    console.log(
-      `${user.profileName} is no longer following ${deletedFollow.followingId}`
-    );
 
     res.status(200).json(deletedFollow);
   } catch (err) {

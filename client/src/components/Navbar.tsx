@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { AuthButton } from "./auth/AuthButton";
+import { LoginAsGuestButton } from "./auth/LoginAsGuestBtn";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ export const Navbar = () => {
           </div>
           <div className="flex space-x-4 items-center">
             <AuthButton />
+            <LoginAsGuestButton />
           </div>
         </div>
       </div>

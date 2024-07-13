@@ -19,16 +19,20 @@ export const LoginAsGuestButton = () => {
   };
 
   return (
-    <div
-      hidden={isAuthenticated && !isGuest}
-      className="bg-blue-500 rounded-lg px-5 py-2"
-    >
+    <div hidden={isAuthenticated && !isGuest}>
       {user && isAuthenticated ? (
-        <button className="" onClick={handleLogout} disabled={isLoading}>
+        <button
+          className="bg-blue-500 rounded-lg px-5 py-2"
+          onClick={handleLogout}
+          disabled={isLoading}
+        >
           {isLoading ? "Logging Out..." : "Logout"}
         </button>
       ) : (
-        <button className="" onClick={() => loginAsGuest()}>
+        <button
+          className="bg-blue-500 rounded-lg px-5 py-2"
+          onClick={() => loginAsGuest()}
+        >
           Login as Guest
         </button>
       )}

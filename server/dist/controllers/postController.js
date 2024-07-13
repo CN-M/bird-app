@@ -34,6 +34,7 @@ const getGeneralFeed = async (req, res) => {
                 createdAt: true,
                 id: true,
             },
+            orderBy: { createdAt: "desc" },
         });
         res.status(200).json(posts);
     }
@@ -57,6 +58,7 @@ const getFollowingFeed = async (req, res) => {
             // where: { followingId: userId },
             where: { followerId: userId },
             select: { followingId: true },
+            orderBy: { createdAt: "desc" },
         });
         if (!following || following.length === 0) {
             // return res.status(400).json();

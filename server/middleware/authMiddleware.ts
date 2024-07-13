@@ -39,13 +39,7 @@ export const protect = async (
     ? req.cookies["refreshToken"]
     : null;
 
-  console.log("Authorized 1");
-
-  console.log(accessToken);
-  console.log(refreshToken);
-
   if (!accessToken || !refreshToken) {
-    // if (!accessToken) {
     return res.status(401).json({ error: "Not authorized, no tokens" });
   }
 
@@ -94,7 +88,6 @@ export const protect = async (
         }
 
         const newAccessToken = generateAccessToken(user);
-        console.log("New Access Token Generated");
 
         res.header("authorization", newAccessToken);
         req.user = user;

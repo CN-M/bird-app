@@ -7,6 +7,7 @@ export const AuthButton = () => {
   const user = useAuthStore((state) => state.user);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoading = useAuthStore((state) => state.isLoading);
+  const isGuest = useAuthStore((state) => state.isGuest);
   const logout = useAuthStore((state) => state.logout);
   const isError = useAuthStore((state) => state.isError);
   const errorMessage = useAuthStore((state) => state.errorMessage);
@@ -17,10 +18,10 @@ export const AuthButton = () => {
   };
 
   return (
-    <div className="">
+    <div hidden={isAuthenticated && isGuest}>
       {user && isAuthenticated ? (
         <button
-          className="bg-emerald-500 rounded-lg px-5 py-2 text-white"
+          className="bg-emerald-500 rounded-lg px-5 py-2 text-black/90"
           onClick={handleLogout}
           disabled={isLoading}
         >
@@ -28,7 +29,7 @@ export const AuthButton = () => {
         </button>
       ) : (
         <button
-          className="bg-emerald-500 rounded-lg px-5 py-2 text-white"
+          className="bg-emerald-500 rounded-lg px-5 py-2 text-black/90"
           onClick={() => navigate("/login")}
         >
           Login

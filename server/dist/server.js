@@ -9,6 +9,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
+const express_rate_limit_1 = require("express-rate-limit");
 const helmet_1 = __importDefault(require("helmet"));
 const morgan_1 = __importDefault(require("morgan"));
 dotenv_1.default.config();
@@ -25,7 +26,14 @@ const node_env = NODE_ENV || "development";
 const app = (0, express_1.default)();
 app.set("trust proxy", 1);
 const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
+const limiter = (0, express_rate_limit_1.rateLimit)({
+    windowMs: 15 * 60 * 1000, // 15 minute
+    limit: 100, // Limit each IP to  requests per `window` (here, per 15 minutes).
+    standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+    legacyHeaders: false,
+});
 // Middleware
+// app.use(limiter);
 app.use((0, morgan_1.default)("dev"));
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({

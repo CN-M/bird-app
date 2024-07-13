@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import express, { Express } from "express";
+import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
 
@@ -27,7 +28,15 @@ app.set("trust proxy", 1);
 
 const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minute
+  limit: 100, // Limit each IP to  requests per `window` (here, per 15 minutes).
+  standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+  legacyHeaders: false,
+});
+
 // Middleware
+// app.use(limiter);
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(

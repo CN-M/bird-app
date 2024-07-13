@@ -36,11 +36,7 @@ const protect = async (req, res, next) => {
     let refreshToken = req.cookies["refreshToken"]
         ? req.cookies["refreshToken"]
         : null;
-    console.log("Authorized 1");
-    console.log(accessToken);
-    console.log(refreshToken);
     if (!accessToken || !refreshToken) {
-        // if (!accessToken) {
         return res.status(401).json({ error: "Not authorized, no tokens" });
     }
     try {
@@ -83,7 +79,6 @@ const protect = async (req, res, next) => {
                     return res.status(400).json({ error: "User not found" });
                 }
                 const newAccessToken = (0, util_1.generateAccessToken)(user);
-                console.log("New Access Token Generated");
                 res.header("authorization", newAccessToken);
                 req.user = user;
                 next();

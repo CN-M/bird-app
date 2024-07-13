@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Follow } from "../components/Follow";
+import { MainLayout } from "../components/MainLayout";
 import { SingleUserFeed } from "../components/SingleUserFeed";
 import { User } from "../components/User";
 import { rootURL } from "../lib/utils";
@@ -40,7 +41,7 @@ export const SingleUser = () => {
   }, []);
 
   return (
-    <div className="border flex flex-col justify-start h-screen lg:w-1/4 md:w-1/2">
+    <MainLayout>
       {isLoading ? (
         <p>Loading user...</p>
       ) : (
@@ -82,6 +83,6 @@ export const SingleUser = () => {
           )}
         </>
       )}
-    </div>
+    </MainLayout>
   );
 };

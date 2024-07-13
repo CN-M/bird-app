@@ -10,6 +10,7 @@ const authMiddleware_1 = require("../middleware/authMiddleware");
 router.route("/relationship").post(authMiddleware_1.protect, userController_1.getFollowRelationship);
 router.route("/follow").post(authMiddleware_1.protect, userController_1.followUser);
 router.route("/unfollow").delete(authMiddleware_1.protect, userController_1.unfollowUser);
+router.route("/suggestions").get(authMiddleware_1.protect, userController_1.getFollowSuggestions);
 router.route("/:username/edit").put(authMiddleware_1.protect, userController_1.editUserProfile);
 router.route("/:username/upgrade").put(authMiddleware_1.protect, userController_1.upgradeUser);
 router.route("/:username/downgrade").put(authMiddleware_1.protect, userController_1.downgradeUser);

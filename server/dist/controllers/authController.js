@@ -92,7 +92,6 @@ exports.registerUser = registerUser;
 const loginUser = async (req, res) => {
     try {
         const { username, password } = req.body;
-        console.log(req.body);
         if (!username || !password) {
             return res.status(400).json({ error: "Please fill in all fields" });
         }
@@ -182,7 +181,6 @@ const refreshUser = async (req, res) => {
             return res.status(400).json({ error: "User not found" });
         }
         const newAccessToken = (0, util_1.generateAccessToken)(user);
-        console.log("New User successfully refreshed");
         res.header("authorization", newAccessToken);
         req.user = user;
     }

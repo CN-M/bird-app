@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Comment } from "../components/Comment";
+import { MainLayout } from "../components/MainLayout";
 import { ReplyInput } from "../components/ReplyInput";
 import { rootURL } from "../lib/utils";
 import { CommentType } from "../types";
@@ -32,7 +33,6 @@ export const SingleReply = () => {
 
         setComment(data);
 
-        console.log(data);
         setIsLoading(false);
       } catch (err) {
         console.error("Error", err);
@@ -44,7 +44,7 @@ export const SingleReply = () => {
   }, []);
 
   return (
-    <div className="border flex flex-col justify-start h-screen lg:w-1/4 md:w-1/2">
+    <MainLayout>
       {isLoading ? (
         <p>Loading comment...</p>
       ) : (
@@ -59,6 +59,6 @@ export const SingleReply = () => {
           )}
         </>
       )}
-    </div>
+    </MainLayout>
   );
 };

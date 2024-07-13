@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { GeneralFeed } from "../components/GeneralFeed";
+import { MainLayout } from "../components/MainLayout";
 import { PostInput } from "../components/PostInput";
 import { UserFeed } from "../components/UserFeed";
 
@@ -7,7 +8,7 @@ export const Main = () => {
   const [activeTab, setActiveTab] = useState("general");
 
   return (
-    <div className="border flex flex-col justify-between h-screen lg:w-1/4 md:w-1/2">
+    <MainLayout>
       <PostInput />
       <div className="flex flex-col h-full">
         <div className="flex justify-around border-b">
@@ -29,6 +30,6 @@ export const Main = () => {
           {activeTab === "user" && <UserFeed />}
         </div>
       </div>
-    </div>
+    </MainLayout>
   );
 };
