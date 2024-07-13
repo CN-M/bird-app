@@ -73,6 +73,19 @@ export const registerUser = async (req: Request, res: Response) => {
         })
         .header("authorization", accessToken);
 
+      const followExists = await prisma.follower.findFirst({
+        where: { followerId: id, followingId: id },
+      });
+
+      if (!followExists) {
+        await prisma.follower.create({
+          data: {
+            follower: { connect: { id } },
+            following: { connect: { id } },
+          },
+        });
+      }
+
       return res.status(201).json({
         id,
         profileName,

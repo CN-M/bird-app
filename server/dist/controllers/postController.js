@@ -63,38 +63,38 @@ const getFollowingFeed = async (req, res) => {
             return res.status(200).json([]);
         }
         const followingIds = following.map((user) => user.followingId);
-        const userPosts = await db_1.prisma.post.findMany({
-            where: {
-                authorId: userId,
-            },
-            select: {
-                author: {
-                    select: {
-                        id: true,
-                        profileName: true,
-                        isPremium: true,
-                        profilePicture: true,
-                        username: true,
-                    },
-                },
-                comments: {
-                    select: {
-                        author: { select: { username: true, profilePicture: true } },
-                        content: true,
-                        id: true,
-                        parentCommentId: true,
-                        likes: true,
-                        createdAt: true,
-                        postId: true,
-                        replies: true,
-                    },
-                },
-                content: true,
-                likes: true,
-                createdAt: true,
-                id: true,
-            },
-        });
+        // const userPosts = await prisma.post.findMany({
+        //   where: {
+        //     authorId: userId,
+        //   },
+        //   select: {
+        //     author: {
+        //       select: {
+        //         id: true,
+        //         profileName: true,
+        //         isPremium: true,
+        //         profilePicture: true,
+        //         username: true,
+        //       },
+        //     },
+        //     comments: {
+        //       select: {
+        //         author: { select: { username: true, profilePicture: true } },
+        //         content: true,
+        //         id: true,
+        //         parentCommentId: true,
+        //         likes: true,
+        //         createdAt: true,
+        //         postId: true,
+        //         replies: true,
+        //       },
+        //     },
+        //     content: true,
+        //     likes: true,
+        //     createdAt: true,
+        //     id: true,
+        //   },
+        // });
         const posts = await db_1.prisma.post.findMany({
             where: {
                 author: {
@@ -129,7 +129,8 @@ const getFollowingFeed = async (req, res) => {
                 id: true,
             },
         });
-        res.status(200).json([...userPosts, ...posts]);
+        // res.status(200).json([...userPosts, ...posts]);
+        res.status(200).json(posts);
     }
     catch (err) {
         console.error("Error fetching posts:", err);
@@ -196,8 +197,16 @@ const getSinglePost = async (req, res) => {
                     },
                 },
                 comments: {
+                    where: { parentCommentId: null },
                     select: {
-                        author: { select: { username: true, profilePicture: true } },
+                        author: {
+                            select: {
+                                username: true,
+                                profilePicture: true,
+                                profileName: true,
+                                isPremium: true,
+                            },
+                        },
                         content: true,
                         id: true,
                         parentCommentId: true,

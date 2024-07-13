@@ -6,7 +6,7 @@ const getSingleComment = async (req, res) => {
     const { postId, commentId: id } = req.params;
     try {
         const comments = await db_1.prisma.comment.findFirst({
-            where: { id, postId },
+            where: { id, postId, parentCommentId: null },
             select: {
                 author: {
                     select: {

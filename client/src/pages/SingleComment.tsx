@@ -7,15 +7,15 @@ import { rootURL } from "../lib/utils";
 import { CommentType } from "../types";
 
 export const SingleComment = () => {
-  const { postId, commentId, replyId } = useParams();
+  const { postId, commentId } = useParams();
 
   let route: string;
 
-  if (replyId) {
-    route = `/${postId}/${commentId}/${replyId}`;
-  } else if (postId && commentId) {
-    route = `/${postId}/${commentId}`;
-  }
+  route = `/${postId}/${commentId}`;
+  // if (replyId) {
+  // route = `/${postId}/${commentId}/${replyId}`;
+  // } else if (postId && commentId) {
+  // }
 
   const [comment, setComment] = useState<CommentType>();
   const [isLoading, setIsLoading] = useState(true);
@@ -56,7 +56,7 @@ export const SingleComment = () => {
           {comment && (
             <>
               <Comment replies={true} comments={[comment]} />
-              <ReplyInput postId={postId} commentId={commentId} />
+              <ReplyInput postId={postId} parentCommentId={commentId} />
               <Comment replies={true} comments={comment.replies} />
             </>
           )}

@@ -34,6 +34,8 @@ export const SinglePost = () => {
     };
 
     getSinglePost();
+
+    console.log(post?.comments);
   }, []);
   return (
     <div className="border flex flex-col justify-start h-screen lg:w-1/4 md:w-1/2">

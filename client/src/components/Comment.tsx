@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../lib/authStore";
 
 import { FaTrash } from "react-icons/fa";
@@ -23,7 +23,10 @@ export const Comment = ({
   const user = useAuthStore((state) => state.user);
   console.log(replies, comments);
 
+  const navigate = useNavigate();
+
   const areTheseReplies = replies;
+  console.log(areTheseReplies);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -52,6 +55,19 @@ export const Comment = ({
     }
   };
 
+  const handleThis = (
+    postId: string,
+    parentCommentId: string | undefined,
+    id: string
+  ) => {
+    if (areTheseReplies && parentCommentId) {
+      navigate(`/reply/${postId}/${parentCommentId}/${id}`, {
+        replace: true,
+      });
+      window.location.reload();
+    }
+  };
+
   return (
     <div className="">
       {comments.length < 1 ? (
@@ -72,8 +88,8 @@ export const Comment = ({
             <div key={id} className="border p-4">
               <div className="flex flex-col space-y-1">
                 <Link
-                  // to={`/${author.username}`}
-                  to={`/`}
+                  to={`/${author.username}`}
+                  // to={`/`}
                   className="flex items-center space-x-3"
                 >
                   <User user={author} />
@@ -85,6 +101,7 @@ export const Comment = ({
                       ? `/reply/${postId}/${parentCommentId}/${id}`
                       : `/comment/${postId}/${id}`
                   }
+                  onClick={() => handleThis(postId, parentCommentId, id)}
                 >
                   <p>{content}</p>
                   <span className="text-gray-500 text-sm">

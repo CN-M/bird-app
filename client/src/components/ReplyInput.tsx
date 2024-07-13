@@ -5,15 +5,13 @@ import { rootURL } from "../lib/utils";
 
 export const ReplyInput = ({
   postId,
-  commentId,
-  parrentCommentId,
+  parentCommentId,
 }: {
   postId?: string;
-  commentId?: string;
-  parrentcommentId?: string;
+  parentCommentId?: string;
 }) => {
   let route: string;
-  if (postId && commentId) {
+  if (postId && parentCommentId) {
     route = `reply`;
   } else if (postId) {
     route = `comment`;
@@ -36,7 +34,7 @@ export const ReplyInput = ({
 
       await axios.post(
         `${rootURL}/comments/${route}`,
-        { content, postId, commentId, parrentCommentId },
+        { content, postId, commentId: parentCommentId },
         {
           withCredentials: true,
           headers: { Authorization: `Bearer ${user.accessToken}` },

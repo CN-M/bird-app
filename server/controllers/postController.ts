@@ -68,39 +68,39 @@ export const getFollowingFeed = async (req: Request, res: Response) => {
 
     const followingIds = following.map((user) => user.followingId);
 
-    const userPosts = await prisma.post.findMany({
-      where: {
-        authorId: userId,
-      },
-      select: {
-        author: {
-          select: {
-            id: true,
-            profileName: true,
-            isPremium: true,
-            profilePicture: true,
-            username: true,
-          },
-        },
-        comments: {
-          select: {
-            author: { select: { username: true, profilePicture: true } },
-            content: true,
-            id: true,
-            parentCommentId: true,
-            likes: true,
-            createdAt: true,
-            postId: true,
-            replies: true,
-          },
-        },
+    // const userPosts = await prisma.post.findMany({
+    //   where: {
+    //     authorId: userId,
+    //   },
+    //   select: {
+    //     author: {
+    //       select: {
+    //         id: true,
+    //         profileName: true,
+    //         isPremium: true,
+    //         profilePicture: true,
+    //         username: true,
+    //       },
+    //     },
+    //     comments: {
+    //       select: {
+    //         author: { select: { username: true, profilePicture: true } },
+    //         content: true,
+    //         id: true,
+    //         parentCommentId: true,
+    //         likes: true,
+    //         createdAt: true,
+    //         postId: true,
+    //         replies: true,
+    //       },
+    //     },
 
-        content: true,
-        likes: true,
-        createdAt: true,
-        id: true,
-      },
-    });
+    //     content: true,
+    //     likes: true,
+    //     createdAt: true,
+    //     id: true,
+    //   },
+    // });
 
     const posts = await prisma.post.findMany({
       where: {
@@ -138,7 +138,8 @@ export const getFollowingFeed = async (req: Request, res: Response) => {
       },
     });
 
-    res.status(200).json([...userPosts, ...posts]);
+    // res.status(200).json([...userPosts, ...posts]);
+    res.status(200).json(posts);
   } catch (err) {
     console.error("Error fetching posts:", err);
     res.status(500).json({ error: "Internal server error." });
@@ -207,8 +208,16 @@ export const getSinglePost = async (req: Request, res: Response) => {
           },
         },
         comments: {
+          where: { parentCommentId: null },
           select: {
-            author: { select: { username: true, profilePicture: true } },
+            author: {
+              select: {
+                username: true,
+                profilePicture: true,
+                profileName: true,
+                isPremium: true,
+              },
+            },
             content: true,
             id: true,
             parentCommentId: true,

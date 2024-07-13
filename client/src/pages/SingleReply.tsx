@@ -9,13 +9,10 @@ import { CommentType } from "../types";
 export const SingleReply = () => {
   const { postId, commentId, replyId } = useParams();
 
-  let route: string;
+  // let route: string;
 
-  if (replyId) {
-    route = `/${postId}/${commentId}/${replyId}`;
-  } else if (postId && commentId) {
-    route = `/${postId}/${commentId}`;
-  }
+  // route = `/${postId}/${commentId}/${replyId}`;
+  // route = `/${postId}/${commentId}`;
 
   const [comment, setComment] = useState<CommentType>();
   const [isLoading, setIsLoading] = useState(true);
@@ -24,8 +21,8 @@ export const SingleReply = () => {
     const getSingleComment = async () => {
       try {
         const response = await axios.get(
-          // `${rootURL}/comments/${postId}/${commentId}`,
-          `${rootURL}/comments/${route}`,
+          `${rootURL}/comments/${postId}/${commentId}/${replyId}`,
+          // `${rootURL}/comments/${route}`,
           {
             withCredentials: true,
           }
@@ -56,7 +53,7 @@ export const SingleReply = () => {
           {comment && (
             <>
               <Comment replies={true} comments={[comment]} />
-              <ReplyInput postId={postId} commentId={commentId} />
+              <ReplyInput postId={postId} parentCommentId={replyId} />
               <Comment replies={true} comments={comment.replies} />
             </>
           )}

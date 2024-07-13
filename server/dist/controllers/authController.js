@@ -61,6 +61,17 @@ const registerUser = async (req, res) => {
                 maxAge: 15 * 24 * 60 * 60 * 1000, // 15 Days
             })
                 .header("authorization", accessToken);
+            const followExists = await db_1.prisma.follower.findFirst({
+                where: { followerId: id, followingId: id },
+            });
+            if (!followExists) {
+                await db_1.prisma.follower.create({
+                    data: {
+                        follower: { connect: { id } },
+                        following: { connect: { id } },
+                    },
+                });
+            }
             return res.status(201).json({
                 id,
                 profileName,

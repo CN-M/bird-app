@@ -8,15 +8,17 @@ Auth:
 Post & Comments:
 - [X] View general tweets
 - [X] View feed tweets
-- [ ] Post tweets (capped limit)
+- [X] Post tweets 
+    [ ] (capped limit)
+
 - [X] Delete tweets
 - [ ] Edit tweets (premium)
 - [ ] Write long tweets (premium)
 - [X] Like tweets
 - [ ] Bookmark tweets (premium) (nice to have)
-- [ ] Comments tweets
-- [ ] Comments get likes
-- [ ] Comments on Comments
+- [X] Comments tweets
+- [X] Comments get likes
+- [X] Comments on Comments
 
 Users:
 - [ ] Edit profile
