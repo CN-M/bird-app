@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../lib/authStore";
+// import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { FaTrash } from "react-icons/fa";
 import { Bookmark } from "./Bookmark";
@@ -22,7 +23,7 @@ export const Comment = ({
 }) => {
   const user = useAuthStore((state) => state.user);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const areTheseReplies = replies;
 
@@ -53,18 +54,18 @@ export const Comment = ({
     }
   };
 
-  const handleThis = (
-    postId: string,
-    parentCommentId: string | undefined,
-    id: string
-  ) => {
-    if (areTheseReplies && parentCommentId) {
-      navigate(`/reply/${postId}/${parentCommentId}/${id}`, {
-        replace: true,
-      });
-      window.location.reload();
-    }
-  };
+  // const handleThis = (
+  //   postId: string,
+  //   parentCommentId: string | undefined,
+  //   id: string
+  // ) => {
+  //   if (areTheseReplies && parentCommentId) {
+  //     navigate(`/reply/${postId}/${parentCommentId}/${id}`, {
+  //       replace: true,
+  //     });
+  //     window.location.reload();
+  //   }
+  // };
 
   return (
     <div className="">
@@ -93,19 +94,21 @@ export const Comment = ({
                   <User user={author} />
                 </Link>
                 {/* <Link to={`/comment/${postId}/${id}`}> */}
-                <Link
-                  to={
+                {/* <Link */}
+                <a
+                  href={
                     areTheseReplies
                       ? `/reply/${postId}/${parentCommentId}/${id}`
                       : `/comment/${postId}/${id}`
                   }
-                  onClick={() => handleThis(postId, parentCommentId, id)}
+                  // onClick={() => handleThis(postId, parentCommentId, id)}
                 >
                   <p>{content}</p>
                   <span className="text-gray-500 text-sm">
                     {new Date(createdAt).toLocaleDateString()}
                   </span>
-                </Link>
+                  {/* </Link> */}
+                </a>
                 <div className="flex items-center space-x-2 text-gray-500">
                   <Reply comments={replies} />
                   <Like commentId={id} likes={likes} />

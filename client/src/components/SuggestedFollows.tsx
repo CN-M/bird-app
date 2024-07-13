@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { useAuthStore } from "../lib/authStore";
 import { rootURL } from "../lib/utils";
 import { UserType } from "../types";
@@ -52,12 +51,14 @@ export const SuggestedFollows = () => {
           ) : (
             userSuggestions.map((user) => (
               <div key={user.id} className="flex justify-between">
-                <Link
-                  to={`/${user.username}`}
+                {/* <Link */}
+                <a
+                  href={`/${user.username}`}
                   className="flex items-center space-x-3"
                 >
                   <User user={user} />
-                </Link>
+                  {/* </Link> */}
+                </a>
                 <Follow followingId={user.id} />
               </div>
             ))
