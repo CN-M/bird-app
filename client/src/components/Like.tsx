@@ -32,33 +32,15 @@ export const Like = ({
   const [likeIsLoading, setLikeIsLoading] = useState(false);
   const [unlikeIsLoading, setUnlikeIsLoading] = useState(false);
 
-  const handleUnlike = async (
-    e: React.MouseEvent<HTMLSpanElement, MouseEvent>
-  ) => {
-    e.preventDefault();
-    setUnlikeIsLoading(true);
-    try {
-      if (!user || !user.accessToken) {
-        throw new Error("User not authenticated or token not available.");
-      }
-
-      await axios.delete(`${rootURL}/likes/${route}`, {
-        withCredentials: true,
-        headers: { Authorization: `Bearer ${user?.accessToken}` },
-      });
-      setUnlikeIsLoading(false);
-      setTotalLikes(totalLikes - 1);
-      setLiked(!liked);
-    } catch (err) {
-      console.error("Error", err);
-      setUnlikeIsLoading(false);
-    }
-  };
-
   const handleLike = async (
     e: React.MouseEvent<HTMLSpanElement, MouseEvent>
   ) => {
     e.preventDefault();
+
+    // Optimistic Updates
+    const newTotalLikes = liked ? totalLikes - 1 : totalLikes + 1;
+    setTotalLikes(newTotalLikes);
+    setLiked(!liked);
 
     setLikeIsLoading(true);
     try {
@@ -66,20 +48,59 @@ export const Like = ({
         throw new Error("User not authenticated or token not available.");
       }
 
-      await axios.post(
-        `${rootURL}/likes/${route}`,
-        {},
-        {
-          withCredentials: true,
-          headers: { Authorization: `Bearer ${user.accessToken}` },
-        }
-      );
-      setLikeIsLoading(false);
-      setTotalLikes(totalLikes + 1);
-      setLiked(!liked);
+      setTimeout(async () => {
+        await axios.post(
+          `${rootURL}/likes/${route}`,
+          {},
+          {
+            withCredentials: true,
+            headers: { Authorization: `Bearer ${user.accessToken}` },
+          }
+        );
+      }, 3000);
     } catch (err) {
       console.error("Error", err);
+
+      setTotalLikes(totalLikes);
+      setLiked(!liked);
+
       setLikeIsLoading(false);
+    } finally {
+      setLikeIsLoading(false);
+    }
+  };
+
+  const handleUnlike = async (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+
+    // Optimistic Updates
+    const newTotalLikes = liked ? totalLikes - 1 : totalLikes + 1;
+    setTotalLikes(newTotalLikes);
+    setLiked(!liked);
+
+    setUnlikeIsLoading(true);
+    try {
+      if (!user || !user.accessToken) {
+        throw new Error("User not authenticated or token not available.");
+      }
+
+      setTimeout(async () => {
+        await axios.delete(`${rootURL}/likes/${route}`, {
+          withCredentials: true,
+          headers: { Authorization: `Bearer ${user?.accessToken}` },
+        });
+      }, 3000);
+    } catch (err) {
+      console.error("Error", err);
+
+      setTotalLikes(totalLikes);
+      setLiked(!liked);
+
+      setUnlikeIsLoading(false);
+    } finally {
+      setUnlikeIsLoading(false);
     }
   };
 
@@ -88,6 +109,7 @@ export const Like = ({
       {liked ? (
         <span
           onClick={handleUnlike}
+          // onClick={handleLike}
           aria-disabled={unlikeIsLoading}
           className="flex items-center justify-center gap-1 text-red-500 hover:bg-red-500/25 hover: rounded-full px-2 cursor-pointer"
         >

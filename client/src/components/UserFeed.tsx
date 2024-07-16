@@ -1,38 +1,22 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useAuthStore } from "../lib/authStore";
-import { rootURL } from "../lib/utils";
-import { PostType } from "../types";
+import { Dispatch, SetStateAction } from "react";
+import { PostType, UserType } from "../types";
 import { Post } from "./Post";
 
-export const UserFeed = () => {
-  const [feedPosts, setFeedPosts] = useState<PostType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const user = useAuthStore((state) => state.user);
-
-  useEffect(() => {
-    const getUserFeed = async () => {
-      try {
-        const response = await axios.get(`${rootURL}/posts/feed`, {
-          withCredentials: true,
-          headers: { Authorization: `Bearer ${user?.accessToken}` },
-        });
-
-        const { data } = response;
-
-        setFeedPosts(data);
-
-        setIsLoading(false);
-      } catch (err) {
-        console.error("Error", err);
-        setIsLoading(false);
-      }
-    };
-
-    getUserFeed();
-  }, []);
-
+export const UserFeed = ({
+  generalFeedPosts,
+  userFeedPosts,
+  setGeneralFeedPosts,
+  setUserFeedPosts,
+  isLoading,
+  user,
+}: {
+  generalFeedPosts: PostType[];
+  userFeedPosts: PostType[];
+  setGeneralFeedPosts: Dispatch<SetStateAction<PostType[]>>;
+  setUserFeedPosts: Dispatch<SetStateAction<PostType[]>>;
+  isLoading: boolean;
+  user: UserType | null;
+}) => {
   if (!user) {
     return <p>Log in to see your feed</p>;
   }
@@ -43,10 +27,19 @@ export const UserFeed = () => {
         <p>Loading posts...</p>
       ) : (
         <>
-          {feedPosts?.length < 1 ? (
+          {userFeedPosts?.length < 1 ? (
             <p>Start following people to see their posts!</p>
           ) : (
-            feedPosts.map((post) => <Post key={post.id} post={post} />)
+            userFeedPosts.map((post) => (
+              <Post
+                setGeneralFeedPosts={setGeneralFeedPosts}
+                setUserFeedPosts={setUserFeedPosts}
+                generalPosts={userFeedPosts}
+                userPosts={generalFeedPosts}
+                key={post.id}
+                post={post}
+              />
+            ))
           )}
         </>
       )}

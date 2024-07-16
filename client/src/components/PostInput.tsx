@@ -1,10 +1,21 @@
 import axios from "axios";
+import { Dispatch, SetStateAction, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "../lib/authStore";
-
-import { useState } from "react";
 import { rootURL } from "../lib/utils";
+import { PostType } from "../types";
 
-export const PostInput = () => {
+export const PostInput = ({
+  generalFeedPosts,
+  userFeedPosts,
+  setUserFeedPosts,
+  setGeneralFeedPosts,
+}: {
+  generalFeedPosts: PostType[];
+  userFeedPosts: PostType[];
+  setUserFeedPosts: Dispatch<SetStateAction<PostType[]>>;
+  setGeneralFeedPosts: Dispatch<SetStateAction<PostType[]>>;
+}) => {
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -15,12 +26,31 @@ export const PostInput = () => {
     e.preventDefault();
 
     setIsLoading(true);
+    const genFeed = [...generalFeedPosts];
+    const userFeed = [...userFeedPosts];
+
     try {
       if (!user || !user.accessToken) {
         throw new Error("User not authenticated or token not available.");
       }
 
-      await axios.post(
+      const tempId = uuidv4();
+
+      const newPost: PostType = {
+        id: tempId,
+        author: user,
+        authorId: user.id,
+        comments: [],
+        content,
+        createdAt: Date.now(),
+        likes: [],
+        updatedAT: Date.now(),
+      };
+
+      setGeneralFeedPosts([newPost, ...genFeed]);
+      setUserFeedPosts([newPost, ...userFeed]);
+
+      const res = await axios.post(
         `${rootURL}/posts`,
         { content },
         {
@@ -29,10 +59,25 @@ export const PostInput = () => {
         }
       );
 
-      setIsLoading(false);
+      const actualId = res.data.id;
+      // Replace the temporary ID with the actual ID in the state
+      setGeneralFeedPosts((prev) =>
+        prev.map((post) =>
+          post.id === tempId ? { ...post, id: actualId } : post
+        )
+      );
+      setUserFeedPosts((prev) =>
+        prev.map((post) =>
+          post.id === tempId ? { ...post, id: actualId } : post
+        )
+      );
+
       setContent("");
     } catch (err) {
       console.error("Error", err);
+      setGeneralFeedPosts(genFeed);
+      setUserFeedPosts(userFeed);
+    } finally {
       setIsLoading(false);
     }
   };

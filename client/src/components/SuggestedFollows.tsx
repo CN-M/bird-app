@@ -47,7 +47,7 @@ export const SuggestedFollows = () => {
       ) : (
         <div className="flex flex-col space-y-4">
           {userSuggestions?.length < 1 ? (
-            <p>Start following people to see their posts!</p>
+            <p>No new suggestions.</p>
           ) : (
             userSuggestions.map((user) => (
               <div key={user.id} className="flex justify-between">

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../lib/authStore";
@@ -10,7 +10,19 @@ import { Like } from "./Like";
 import { Reply } from "./Reply";
 import { User } from "./User";
 
-export const Post = ({ post }: { post: PostType }) => {
+export const Post = ({
+  post,
+  userPosts,
+  generalPosts,
+  setGeneralFeedPosts,
+  setUserFeedPosts,
+}: {
+  post: PostType;
+  userPosts: PostType[];
+  generalPosts: PostType[];
+  setGeneralFeedPosts: Dispatch<SetStateAction<PostType[]>>;
+  setUserFeedPosts: Dispatch<SetStateAction<PostType[]>>;
+}) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const user = useAuthStore((state) => state.user);
@@ -24,19 +36,31 @@ export const Post = ({ post }: { post: PostType }) => {
     e.preventDefault();
     setIsLoading(true);
 
+    const originalUserPosts = userPosts;
+    const originalGeneralPosts = generalPosts;
+
     try {
       if (!user || !user.accessToken) {
         throw new Error("User not authenticated or token not available.");
       }
 
+      const updatedUserPosts = originalUserPosts.filter(
+        (post) => post.id !== id
+      );
+      const updatedGeneralPosts = originalGeneralPosts.filter(
+        (post) => post.id !== id
+      );
+
+      setGeneralFeedPosts(updatedGeneralPosts);
+      setUserFeedPosts(updatedUserPosts);
+
       await axios.delete(`${rootURL}/posts/${username}/${id}`, {
-        // data: {},
         withCredentials: true,
         headers: { Authorization: `Bearer ${user.accessToken}` },
       });
-      setIsLoading(false);
     } catch (err) {
       console.error("Error", err);
+    } finally {
       setIsLoading(false);
     }
   };

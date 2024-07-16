@@ -1,15 +1,76 @@
-import { useState } from "react";
+import axios from "axios";
 import { GeneralFeed } from "../components/GeneralFeed";
 import { MainLayout } from "../components/MainLayout";
 import { PostInput } from "../components/PostInput";
 import { UserFeed } from "../components/UserFeed";
 
+import { useAuthStore } from "../lib/authStore";
+
+import { useEffect, useState } from "react";
+import { rootURL } from "../lib/utils";
+import { PostType } from "../types";
+
 export const Main = () => {
+  const [generalFeedPosts, setGeneralFeedPosts] = useState<PostType[]>([]);
+  const [userFeedPosts, setUserFeedPosts] = useState<PostType[]>([]);
+
+  const [isUserFeedLoading, setUserFeedIsLoading] = useState(false);
+  const [isGeneralFeedLoading, setGeneralFeedIsLoading] = useState(false);
+
+  const user = useAuthStore((state) => state.user);
+
+  useEffect(() => {
+    const getGeneralFeed = async () => {
+      setGeneralFeedIsLoading(true);
+      try {
+        const response = await axios.get(`${rootURL}/posts`, {
+          withCredentials: true,
+        });
+
+        const { data } = response;
+
+        setGeneralFeedPosts(data);
+
+        setGeneralFeedIsLoading(false);
+      } catch (err) {
+        console.error("Error", err);
+        setGeneralFeedIsLoading(false);
+      }
+    };
+
+    const getUserFeed = async () => {
+      setUserFeedIsLoading(true);
+      try {
+        const response = await axios.get(`${rootURL}/posts/feed`, {
+          withCredentials: true,
+          headers: { Authorization: `Bearer ${user?.accessToken}` },
+        });
+
+        const { data } = response;
+
+        setUserFeedPosts(data.reverse());
+
+        setUserFeedIsLoading(false);
+      } catch (err) {
+        console.error("Error", err);
+        setUserFeedIsLoading(false);
+      }
+    };
+
+    getGeneralFeed();
+    getUserFeed();
+  }, []);
+
   const [activeTab, setActiveTab] = useState("general");
 
   return (
-    <MainLayout>
-      <PostInput />
+    <MainLayout classNames="lg:w-1/4 ">
+      <PostInput
+        generalFeedPosts={generalFeedPosts}
+        userFeedPosts={userFeedPosts}
+        setGeneralFeedPosts={setGeneralFeedPosts}
+        setUserFeedPosts={setUserFeedPosts}
+      />
       <div className="flex flex-col h-full">
         <div className="flex justify-around border-b">
           <button
@@ -26,8 +87,25 @@ export const Main = () => {
           </button>
         </div>
         <div className="p-4 flex-grow overflow-y-auto">
-          {activeTab === "general" && <GeneralFeed />}
-          {activeTab === "user" && <UserFeed />}
+          {activeTab === "general" && (
+            <GeneralFeed
+              generalFeedPosts={generalFeedPosts}
+              userFeedPosts={userFeedPosts}
+              setGeneralFeedPosts={setGeneralFeedPosts}
+              setUserFeedPosts={setUserFeedPosts}
+              isLoading={isGeneralFeedLoading}
+            />
+          )}
+          {activeTab === "user" && (
+            <UserFeed
+              userFeedPosts={userFeedPosts}
+              generalFeedPosts={generalFeedPosts}
+              setGeneralFeedPosts={setGeneralFeedPosts}
+              setUserFeedPosts={setUserFeedPosts}
+              isLoading={isUserFeedLoading}
+              user={user}
+            />
+          )}
         </div>
       </div>
     </MainLayout>

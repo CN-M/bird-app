@@ -46,8 +46,10 @@ export const Follow = ({ followingId }: { followingId: string }) => {
   }, []);
 
   const handleFollow = async () => {
-    setIsLoading(true);
+    const isFollowing = following ? false : true;
+    setFollowing(isFollowing);
 
+    setIsLoading(true);
     try {
       if (!user || !user.accessToken) {
         throw new Error("User not authenticated or token not available.");
@@ -61,17 +63,20 @@ export const Follow = ({ followingId }: { followingId: string }) => {
           headers: { Authorization: `Bearer ${user.accessToken}` },
         }
       );
-      setIsLoading(false);
-      setFollowing(true);
     } catch (err) {
       console.error("Error", err);
+
+      setFollowing(!following);
+    } finally {
       setIsLoading(false);
     }
   };
 
   const handleUnfollow = async () => {
-    setIsLoading(true);
+    const isFollowing = following ? false : true;
+    setFollowing(isFollowing);
 
+    setIsLoading(true);
     try {
       if (!user || !user.accessToken) {
         throw new Error("User not authenticated or token not available.");
@@ -82,10 +87,11 @@ export const Follow = ({ followingId }: { followingId: string }) => {
         withCredentials: true,
         headers: { Authorization: `Bearer ${user.accessToken}` },
       });
-      setIsLoading(false);
-      setFollowing(false);
     } catch (err) {
       console.error("Error", err);
+
+      setFollowing(!following);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -98,6 +104,7 @@ export const Follow = ({ followingId }: { followingId: string }) => {
         <button
           className="bg-indigo-500 rounded-lg px-5 py-2 text-white"
           onClick={handleUnfollow}
+          // onClick={handleFollow}
           disabled={isLoading}
         >
           {isLoading ? "Unfollowing..." : "Unfollow"}

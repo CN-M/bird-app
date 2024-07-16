@@ -7,7 +7,6 @@ exports.refreshUser = exports.logoutUser = exports.loginUser = exports.registerU
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const db_1 = require("../config/db");
 const util_1 = require("../config/util");
-//
 require("dotenv").config();
 const { REFRESH_SECRET, NODE_ENV } = process.env;
 require("dotenv").config();
@@ -75,6 +74,7 @@ const registerUser = async (req, res) => {
             return res.status(201).json({
                 id,
                 profileName,
+                profilePicture,
                 username,
                 accessToken,
             });
@@ -136,6 +136,7 @@ const loginUser = async (req, res) => {
         return res.status(201).json({
             id,
             profileName,
+            profilePicture,
             username: userUsername,
             accessToken,
         });

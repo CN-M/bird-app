@@ -4,8 +4,6 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { prisma } from "../config/db";
 import { generateAccessToken, generateRefreshToken } from "../config/util";
 
-//
-
 require("dotenv").config();
 
 const { REFRESH_SECRET, NODE_ENV } = process.env;
@@ -89,6 +87,7 @@ export const registerUser = async (req: Request, res: Response) => {
       return res.status(201).json({
         id,
         profileName,
+        profilePicture,
         username,
         accessToken,
       });
@@ -165,6 +164,7 @@ export const loginUser = async (req: Request, res: Response) => {
     return res.status(201).json({
       id,
       profileName,
+      profilePicture,
       username: userUsername,
       accessToken,
     });
