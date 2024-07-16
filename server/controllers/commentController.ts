@@ -229,12 +229,12 @@ export const deleteComment = async (req: Request, res: Response) => {
       .json({ error: "Not authoriized, please login or register" });
   }
 
-  const { id: commentId } = req.params;
+  const { postId, commentId } = req.params;
   const { id: userId } = user;
 
   try {
     const comment = await prisma.comment.findFirst({
-      where: { id: commentId, authorId: userId },
+      where: { id: commentId, postId, authorId: userId },
     });
 
     if (!comment) {
@@ -246,6 +246,8 @@ export const deleteComment = async (req: Request, res: Response) => {
     const deletedComment = await prisma.comment.delete({
       where: { id },
     });
+
+    console.log(deletedComment);
 
     res
       .status(200)

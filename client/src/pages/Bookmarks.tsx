@@ -44,8 +44,6 @@ export const Bookmarks = () => {
   }
 
   return (
-    // <div className="flex flex-col items-center justify-start h-screen w-full p-4">
-    // <div className="border flex flex-col items-center justify-between lg:w-1/4 md:w-1/2 sm:w-full">
     <MainLayout>
       <h2 className="text-2xl font-bold mb-4 border-b p-4">Bookmarks</h2>
       {bookmarks.length === 0 ? (
@@ -54,6 +52,5 @@ export const Bookmarks = () => {
         bookmarks.map((bookmark) => <Post key={bookmark.id} post={bookmark} />)
       )}
     </MainLayout>
-    // </div>
   );
 };

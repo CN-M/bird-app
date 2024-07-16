@@ -18,10 +18,10 @@ export const Post = ({
   setUserFeedPosts,
 }: {
   post: PostType;
-  userPosts: PostType[];
-  generalPosts: PostType[];
-  setGeneralFeedPosts: Dispatch<SetStateAction<PostType[]>>;
-  setUserFeedPosts: Dispatch<SetStateAction<PostType[]>>;
+  userPosts?: PostType[];
+  generalPosts?: PostType[];
+  setGeneralFeedPosts?: Dispatch<SetStateAction<PostType[]>>;
+  setUserFeedPosts?: Dispatch<SetStateAction<PostType[]>>;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -44,15 +44,20 @@ export const Post = ({
         throw new Error("User not authenticated or token not available.");
       }
 
-      const updatedUserPosts = originalUserPosts.filter(
-        (post) => post.id !== id
-      );
-      const updatedGeneralPosts = originalGeneralPosts.filter(
+      const updatedUserPosts = originalUserPosts?.filter(
         (post) => post.id !== id
       );
 
-      setGeneralFeedPosts(updatedGeneralPosts);
-      setUserFeedPosts(updatedUserPosts);
+      const updatedGeneralPosts = originalGeneralPosts?.filter(
+        (post) => post.id !== id
+      );
+
+      if (updatedGeneralPosts && setGeneralFeedPosts) {
+        setGeneralFeedPosts(updatedGeneralPosts);
+      }
+      if (updatedUserPosts && setUserFeedPosts) {
+        setUserFeedPosts(updatedUserPosts);
+      }
 
       await axios.delete(`${rootURL}/posts/${username}/${id}`, {
         withCredentials: true,

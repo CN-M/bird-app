@@ -23,11 +23,10 @@ export const Comment = ({
 }) => {
   const user = useAuthStore((state) => state.user);
 
-  // const navigate = useNavigate();
-
   const areTheseReplies = replies;
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
 
   const handleDelete = async (
     postId: string,
@@ -35,37 +34,27 @@ export const Comment = ({
     e: React.MouseEvent<HTMLSpanElement, MouseEvent>
   ) => {
     e.preventDefault();
+
     setIsLoading(true);
+    setIsDeleted(true);
 
     try {
       if (!user || !user.accessToken) {
         throw new Error("User not authenticated or token not available.");
       }
 
+      // console.log(`${rootURL}/comments/${postId}/${commentId}`);
       await axios.delete(`${rootURL}/comments/${postId}/${commentId}`, {
-        // data: {},
         withCredentials: true,
         headers: { Authorization: `Bearer ${user.accessToken}` },
       });
-      setIsLoading(false);
     } catch (err) {
       console.error("Error", err);
+      setIsDeleted(false);
+    } finally {
       setIsLoading(false);
     }
   };
-
-  // const handleThis = (
-  //   postId: string,
-  //   parentCommentId: string | undefined,
-  //   id: string
-  // ) => {
-  //   if (areTheseReplies && parentCommentId) {
-  //     navigate(`/reply/${postId}/${parentCommentId}/${id}`, {
-  //       replace: true,
-  //     });
-  //     window.location.reload();
-  //   }
-  // };
 
   return (
     <div className="">
@@ -95,34 +84,42 @@ export const Comment = ({
                 </Link>
                 {/* <Link to={`/comment/${postId}/${id}`}> */}
                 {/* <Link */}
-                <a
-                  href={
-                    areTheseReplies
-                      ? `/reply/${postId}/${parentCommentId}/${id}`
-                      : `/comment/${postId}/${id}`
-                  }
-                  // onClick={() => handleThis(postId, parentCommentId, id)}
-                >
-                  <p>{content}</p>
-                  <span className="text-gray-500 text-sm">
-                    {new Date(createdAt).toLocaleDateString()}
-                  </span>
-                  {/* </Link> */}
-                </a>
-                <div className="flex items-center space-x-2 text-gray-500">
-                  <Reply comments={replies} />
-                  <Like commentId={id} likes={likes} />
-                  <Bookmark commentId={id} />
-                </div>
-                {user?.id === authorId && (
-                  <span
-                    onClick={(e) => handleDelete(postId, id, e)}
-                    aria-disabled={isLoading}
-                    className="flex items-center justify-center gap-1 hover:bg-gray-500/25 hover:text-gray-500 rounded-full px-2 cursor-pointer"
-                  >
-                    <FaTrash className="size-5" />
-                  </span>
-                )}
+                <>
+                  {isDeleted ? (
+                    <p>Comment has been deleted</p>
+                  ) : (
+                    <>
+                      <a
+                        href={
+                          areTheseReplies
+                            ? `/reply/${postId}/${parentCommentId}/${id}`
+                            : `/comment/${postId}/${id}`
+                        }
+                        // onClick={() => handleThis(postId, parentCommentId, id)}
+                      >
+                        <p>{content}</p>
+                        <span className="text-gray-500 text-sm">
+                          {new Date(createdAt).toLocaleDateString()}
+                        </span>
+                        {/* </Link> */}
+                      </a>
+                      <div className="flex items-center space-x-2 text-gray-500">
+                        <Reply comments={replies} />
+                        <Like commentId={id} likes={likes} />
+                        <Bookmark commentId={id} />
+                      </div>
+                      {user?.id === authorId && (
+                        <span
+                          onClick={(e) => handleDelete(postId, id, e)}
+                          aria-disabled={isLoading}
+                          className="flex items-center justify-center gap-1 hover:bg-gray-500/25 hover:text-gray-500 rounded-full px-2 cursor-pointer"
+                        >
+                          <FaTrash className="size-5" />
+                        </span>
+                      )}
+                    </>
+                  )}
+                </>
               </div>
             </div>
           )

@@ -39,7 +39,14 @@ export const SingleUserFeed = ({ username }: { username: string }) => {
           {feedPosts?.length < 1 ? (
             <p>@{username} hasn't posted anything yet.</p>
           ) : (
-            feedPosts?.map((post) => <Post key={post.id} post={post} />)
+            feedPosts?.map((post) => (
+              <Post
+                setUserFeedPosts={setFeedPosts}
+                userPosts={feedPosts}
+                key={post.id}
+                post={post}
+              />
+            ))
           )}
         </>
       )}

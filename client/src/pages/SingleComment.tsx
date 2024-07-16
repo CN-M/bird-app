@@ -19,10 +19,11 @@ export const SingleComment = () => {
   // }
 
   const [comment, setComment] = useState<CommentType>();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const getSingleComment = async () => {
+      setIsLoading(true);
       try {
         const response = await axios.get(
           // `${rootURL}/comments/${postId}/${commentId}`,

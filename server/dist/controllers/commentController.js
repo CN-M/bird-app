@@ -211,11 +211,11 @@ const deleteComment = async (req, res) => {
             .status(400)
             .json({ error: "Not authoriized, please login or register" });
     }
-    const { id: commentId } = req.params;
+    const { postId, commentId } = req.params;
     const { id: userId } = user;
     try {
         const comment = await db_1.prisma.comment.findFirst({
-            where: { id: commentId, authorId: userId },
+            where: { id: commentId, postId, authorId: userId },
         });
         if (!comment) {
             return res.status(404).json({ error: "Comment not found" });
@@ -224,6 +224,7 @@ const deleteComment = async (req, res) => {
         const deletedComment = await db_1.prisma.comment.delete({
             where: { id },
         });
+        console.log(deletedComment);
         res
             .status(200)
             .json({ message: "Comment deleted", comment: deletedComment });
