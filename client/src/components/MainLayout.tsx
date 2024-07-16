@@ -6,7 +6,7 @@ export const MainLayout = ({
   classNames,
 }: {
   children: React.ReactNode;
-  classNames: string;
+  classNames?: string;
 }) => {
   return (
     <div className="flex space-x-5 justify-center h-full w-full">

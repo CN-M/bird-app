@@ -238,9 +238,9 @@ export const getSinglePost = async (req: Request, res: Response) => {
 
     if (!post) {
       res.status(400).json({ error: "Post not found" });
+    } else {
+      res.status(200).json(post);
     }
-
-    res.status(200).json(post);
   } catch (err) {
     console.error("Error fetching post:", err);
     res.status(500).json({ error: "Internal server error" });

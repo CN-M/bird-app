@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Comment } from "../components/Comment";
 import { MainLayout } from "../components/MainLayout";
-import { Post } from "../components/Post";
+import { OnePost } from "../components/OnePost";
 import { ReplyInput } from "../components/ReplyInput";
 import { rootURL } from "../lib/utils";
 import { PostType } from "../types";
@@ -46,7 +46,7 @@ export const SinglePost = () => {
             <p>Post does not exist</p>
           ) : (
             <>
-              <Post post={post} />
+              <OnePost post={post} />
               <ReplyInput postId={post.id} />
               <div className="flex-grow overflow-y-auto">
                 <Comment replies={false} comments={post.comments} />

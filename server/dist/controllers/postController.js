@@ -227,7 +227,9 @@ const getSinglePost = async (req, res) => {
         if (!post) {
             res.status(400).json({ error: "Post not found" });
         }
-        res.status(200).json(post);
+        else {
+            res.status(200).json(post);
+        }
     }
     catch (err) {
         console.error("Error fetching post:", err);
