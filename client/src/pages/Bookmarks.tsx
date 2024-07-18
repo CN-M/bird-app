@@ -13,6 +13,7 @@ export const Bookmarks = () => {
   //   const [bookmarks, setBookmarks] = useState<BookmarkType[]>([]);
   const [bookmarks, setBookmarks] = useState<PostType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
   const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
@@ -46,10 +47,18 @@ export const Bookmarks = () => {
   return (
     <MainLayout>
       <h2 className="text-2xl font-bold mb-4 border-b p-4">Bookmarks</h2>
-      {bookmarks.length === 0 ? (
-        <p>You have no bookmarks.</p>
+      {user ? (
+        <>
+          {bookmarks.length === 0 ? (
+            <p>You have no bookmarks.</p>
+          ) : (
+            bookmarks.map((bookmark) => (
+              <Post key={bookmark.id} post={bookmark} />
+            ))
+          )}
+        </>
       ) : (
-        bookmarks.map((bookmark) => <Post key={bookmark.id} post={bookmark} />)
+        <p>Login to see your bookmarks</p>
       )}
     </MainLayout>
   );

@@ -15,7 +15,8 @@ export const SingleReply = () => {
   // route = `/${postId}/${commentId}/${replyId}`;
   // route = `/${postId}/${commentId}`;
 
-  const [comment, setComment] = useState<CommentType>();
+  const [reply, setReply] = useState<CommentType>();
+  const [replies, setReplies] = useState<CommentType[]>();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -31,7 +32,8 @@ export const SingleReply = () => {
 
         const { data } = response;
 
-        setComment(data);
+        setReply(data);
+        setReplies(data.replies);
 
         setIsLoading(false);
       } catch (err) {
@@ -49,12 +51,21 @@ export const SingleReply = () => {
         <p>Loading comment...</p>
       ) : (
         <>
-          {!comment && <p>Comment does not exist</p>}
-          {comment && (
+          {!reply && <p>Reply does not exist</p>}
+          {reply && (
             <>
-              <Comment replies={true} comments={[comment]} />
-              <ReplyInput postId={postId} parentCommentId={replyId} />
-              <Comment replies={true} comments={comment.replies} />
+              <Comment areTheseReplies={true} comments={[reply]} />
+              <ReplyInput
+                postId={postId ? postId : ""}
+                parentCommentId={replyId}
+                postComments={replies}
+                setPostComments={setReplies}
+                post={reply.post}
+              />
+              <Comment
+                areTheseReplies={true}
+                comments={replies ? replies : reply.replies}
+              />
             </>
           )}
         </>

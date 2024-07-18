@@ -32,7 +32,7 @@ export type CommentType = {
   postId: string;
   authorId: string;
   createdAt: number;
-  updatedAT: number;
+  updatedAt: number;
   likes: LikeType[];
   parentComment?: CommentType[];
   parentCommentId?: string;

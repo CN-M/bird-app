@@ -49,9 +49,7 @@ export const getSingleComment = async (req: Request, res: Response) => {
     });
 
     if (!comments) {
-      return res
-        .status(200)
-        .json({ comments: 0, message: "No comments on this post" });
+      return res.status(400).json({ error: "Post not found" });
     }
 
     return res.status(200).json(comments);

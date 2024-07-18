@@ -227,6 +227,7 @@ export const getSinglePost = async (req: Request, res: Response) => {
             createdAt: true,
             postId: true,
             replies: true,
+            authorId: true,
           },
         },
         content: true,

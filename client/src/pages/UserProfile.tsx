@@ -44,70 +44,74 @@ export const UserProfile = () => {
 
   return (
     <MainLayout>
-      <div className="p-4">
-        <div className="flex items-center space-x-4">
-          {user?.profilePicture ? (
-            <img
-              className="w-20 h-20 border border-emerald-500 rounded-full"
-              src={user?.profilePicture}
-              alt={`@${user?.username}`}
-            />
+      {user ? (
+        <div className="p-4">
+          <div className="flex items-center space-x-4">
+            {user?.profilePicture ? (
+              <img
+                className="w-20 h-20 border border-emerald-500 rounded-full"
+                src={user?.profilePicture}
+                alt={`@${user?.username}`}
+              />
+            ) : (
+              <div className="w-20 h-20 flex items-center justify-center border rounded-full border-emerald-500">
+                {user?.username.charAt(0).toUpperCase()}
+              </div>
+            )}
+            <div>
+              <h2 className="text-xl font-bold">@{user?.username}</h2>
+              <button
+                onClick={() => setEditMode(!editMode)}
+                className="bg-blue-500 py-2 px-4 rounded-full text-white hover:bg-blue-600 transition-colors duration-300"
+              >
+                {editMode ? "Cancel" : "Edit Profile"}
+              </button>
+            </div>
+          </div>
+          {editMode ? (
+            <div className="mt-4 space-y-4">
+              <div>
+                <label className="block text-gray-700">Profile Name</label>
+                <input
+                  type="text"
+                  name="profileName"
+                  value={profileData.profileName}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg focus:border-blue-500 focus:ring-0 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700">Bio</label>
+                <textarea
+                  name="bio"
+                  value={profileData.bio}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg focus:border-blue-500 focus:ring-0 focus:outline-none"
+                />
+              </div>
+              <button
+                onClick={handleSave}
+                className="bg-blue-500 py-2 px-4 rounded-full text-white hover:bg-blue-600 transition-colors duration-300"
+                disabled={isLoading}
+              >
+                {isLoading ? "Saving..." : "Save Changes"}
+              </button>
+            </div>
           ) : (
-            <div className="w-20 h-20 flex items-center justify-center border rounded-full border-emerald-500">
-              {user?.username.charAt(0).toUpperCase()}
+            <div className="mt-4">
+              <p className="text-gray-700">
+                <strong>Profile Name:</strong> {user?.profileName}
+              </p>
+              <p className="text-gray-700">
+                {/* <strong>Bio:</strong> {user?.bio} */}
+                <strong>Bio:</strong> {bio}
+              </p>
             </div>
           )}
-          <div>
-            <h2 className="text-xl font-bold">@{user?.username}</h2>
-            <button
-              onClick={() => setEditMode(!editMode)}
-              className="bg-blue-500 py-2 px-4 rounded-full text-white hover:bg-blue-600 transition-colors duration-300"
-            >
-              {editMode ? "Cancel" : "Edit Profile"}
-            </button>
-          </div>
         </div>
-        {editMode ? (
-          <div className="mt-4 space-y-4">
-            <div>
-              <label className="block text-gray-700">Profile Name</label>
-              <input
-                type="text"
-                name="profileName"
-                value={profileData.profileName}
-                onChange={handleChange}
-                className="w-full p-2 border rounded-lg focus:border-blue-500 focus:ring-0 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700">Bio</label>
-              <textarea
-                name="bio"
-                value={profileData.bio}
-                onChange={handleChange}
-                className="w-full p-2 border rounded-lg focus:border-blue-500 focus:ring-0 focus:outline-none"
-              />
-            </div>
-            <button
-              onClick={handleSave}
-              className="bg-blue-500 py-2 px-4 rounded-full text-white hover:bg-blue-600 transition-colors duration-300"
-              disabled={isLoading}
-            >
-              {isLoading ? "Saving..." : "Save Changes"}
-            </button>
-          </div>
-        ) : (
-          <div className="mt-4">
-            <p className="text-gray-700">
-              <strong>Profile Name:</strong> {user?.profileName}
-            </p>
-            <p className="text-gray-700">
-              {/* <strong>Bio:</strong> {user?.bio} */}
-              <strong>Bio:</strong> {bio}
-            </p>
-          </div>
-        )}
-      </div>
+      ) : (
+        <p>Login to edit your profile</p>
+      )}
     </MainLayout>
   );
 };

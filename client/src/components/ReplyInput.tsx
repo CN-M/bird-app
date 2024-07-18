@@ -1,13 +1,21 @@
 import axios from "axios";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "../lib/authStore";
 import { rootURL } from "../lib/utils";
+import { CommentType, PostType } from "../types";
 
 export const ReplyInput = ({
+  post,
   postId,
   parentCommentId,
+  postComments,
+  setPostComments,
 }: {
-  postId?: string;
+  post: PostType;
+  postComments: CommentType[] | undefined;
+  setPostComments: Dispatch<SetStateAction<CommentType[] | undefined>>;
+  postId: string;
   parentCommentId?: string;
 }) => {
   let route: string;
@@ -25,14 +33,37 @@ export const ReplyInput = ({
   // @ts-ignore
   const handleReply = async (e) => {
     e.preventDefault();
-
     setIsLoading(true);
+
+    const originalComments = postComments ? [...postComments] : [];
+
     try {
       if (!user || !user.accessToken) {
         throw new Error("User not authenticated or token not available.");
       }
+      const tempId = uuidv4();
 
-      await axios.post(
+      const newComment: CommentType = {
+        id: tempId,
+        postId,
+        content,
+        parentCommentId: parentCommentId || undefined,
+        likes: [],
+        replies: [],
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        author: user,
+        authorId: user.id,
+        post,
+        parentComment: [],
+      };
+
+      console.log(originalComments);
+      console.log(newComment);
+
+      setPostComments([newComment, ...originalComments]);
+
+      const res = await axios.post(
         `${rootURL}/comments/${route}`,
         { content, postId, commentId: parentCommentId },
         {
@@ -41,10 +72,18 @@ export const ReplyInput = ({
         }
       );
 
-      setIsLoading(false);
+      const actualId = res.data.id;
+      setPostComments((prev) =>
+        prev?.map((comment) =>
+          post.id === tempId ? { ...comment, id: actualId } : comment
+        )
+      );
+
       setContent("");
     } catch (err) {
       console.error("Error", err);
+      setPostComments(originalComments);
+    } finally {
       setIsLoading(false);
     }
   };

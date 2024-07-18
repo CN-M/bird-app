@@ -49,7 +49,7 @@ export const Follow = ({ followingId }: { followingId: string }) => {
     const isFollowing = following ? false : true;
     setFollowing(isFollowing);
 
-    setIsLoading(true);
+    // setIsLoading(true);
     try {
       if (!user || !user.accessToken) {
         throw new Error("User not authenticated or token not available.");
@@ -104,10 +104,9 @@ export const Follow = ({ followingId }: { followingId: string }) => {
         <button
           className="bg-indigo-500 rounded-lg px-5 py-2 text-white"
           onClick={handleUnfollow}
-          // onClick={handleFollow}
           disabled={isLoading}
         >
-          {isLoading ? "Unfollowing..." : "Unfollow"}
+          Unfollow
         </button>
       ) : (
         <button
@@ -115,7 +114,7 @@ export const Follow = ({ followingId }: { followingId: string }) => {
           onClick={handleFollow}
           disabled={isLoading}
         >
-          {isLoading ? "Following..." : "Follow"}
+          Follow
         </button>
       )}
     </div>

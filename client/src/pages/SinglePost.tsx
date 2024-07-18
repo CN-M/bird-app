@@ -6,13 +6,14 @@ import { MainLayout } from "../components/MainLayout";
 import { OnePost } from "../components/OnePost";
 import { ReplyInput } from "../components/ReplyInput";
 import { rootURL } from "../lib/utils";
-import { PostType } from "../types";
+import { CommentType, PostType } from "../types";
 
 export const SinglePost = () => {
   const { username, postId } = useParams();
 
   const [post, setPost] = useState<PostType>();
   const [isLoading, setIsLoading] = useState(true);
+  const [postComments, setPostComments] = useState<CommentType[]>();
 
   useEffect(() => {
     const getSinglePost = async () => {
@@ -26,6 +27,7 @@ export const SinglePost = () => {
 
         const { data } = response;
         setPost(data);
+        setPostComments(data.comments.reverse());
 
         setIsLoading(false);
       } catch (err) {
@@ -47,9 +49,17 @@ export const SinglePost = () => {
           ) : (
             <>
               <OnePost post={post} />
-              <ReplyInput postId={post.id} />
+              <ReplyInput
+                post={post}
+                postComments={postComments}
+                setPostComments={setPostComments}
+                postId={post.id}
+              />
               <div className="flex-grow overflow-y-auto">
-                <Comment replies={false} comments={post.comments} />
+                <Comment
+                  areTheseReplies={false}
+                  comments={postComments ? postComments : post.comments}
+                />
               </div>
             </>
           )}

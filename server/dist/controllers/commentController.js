@@ -48,9 +48,7 @@ const getSingleComment = async (req, res) => {
             },
         });
         if (!comments) {
-            return res
-                .status(200)
-                .json({ comments: 0, message: "No comments on this post" });
+            return res.status(400).json({ error: "Post not found" });
         }
         return res.status(200).json(comments);
     }

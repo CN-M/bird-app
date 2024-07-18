@@ -33,7 +33,7 @@ export const LoginAsGuestButton = () => {
           className="bg-blue-500 rounded-lg px-5 py-2"
           onClick={() => loginAsGuest()}
         >
-          Login as Guest
+          {isLoading ? "Logging In..." : "Login as Guest"}
         </button>
       )}
       {isError && <p className="text-red-500 text-sm">{errorMessage}</p>}
