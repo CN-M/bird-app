@@ -48,16 +48,14 @@ export const Like = ({
         throw new Error("User not authenticated or token not available.");
       }
 
-      setTimeout(async () => {
-        await axios.post(
-          `${rootURL}/likes/${route}`,
-          {},
-          {
-            withCredentials: true,
-            headers: { Authorization: `Bearer ${user.accessToken}` },
-          }
-        );
-      }, 3000);
+      await axios.post(
+        `${rootURL}/likes/${route}`,
+        {},
+        {
+          withCredentials: true,
+          headers: { Authorization: `Bearer ${user.accessToken}` },
+        }
+      );
     } catch (err) {
       console.error("Error", err);
 
@@ -86,12 +84,10 @@ export const Like = ({
         throw new Error("User not authenticated or token not available.");
       }
 
-      setTimeout(async () => {
-        await axios.delete(`${rootURL}/likes/${route}`, {
-          withCredentials: true,
-          headers: { Authorization: `Bearer ${user?.accessToken}` },
-        });
-      }, 3000);
+      await axios.delete(`${rootURL}/likes/${route}`, {
+        withCredentials: true,
+        headers: { Authorization: `Bearer ${user?.accessToken}` },
+      });
     } catch (err) {
       console.error("Error", err);
 

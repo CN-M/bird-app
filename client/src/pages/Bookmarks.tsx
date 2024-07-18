@@ -38,14 +38,14 @@ export const Bookmarks = () => {
     };
 
     fetchBookmarks();
-  }, [user]);
+  }, []);
 
   if (isLoading) {
     return <p>Loading bookmarks...</p>;
   }
 
   return (
-    <MainLayout>
+    <MainLayout classNames="lg:w-1/4">
       <h2 className="text-2xl font-bold mb-4 border-b p-4">Bookmarks</h2>
       {user ? (
         <>

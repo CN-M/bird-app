@@ -5,17 +5,15 @@ import { Follow } from "../components/Follow";
 import { MainLayout } from "../components/MainLayout";
 import { SingleUserFeed } from "../components/SingleUserFeed";
 import { User } from "../components/User";
+import { useAuthStore } from "../lib/authStore";
 import { rootURL } from "../lib/utils";
 import { UserType } from "../types";
-
-// interface UserDetails extends UserType {
-//   posts: PostType[];
-// }
 
 export const SingleUser = () => {
   const { username } = useParams();
 
-  // const [user, setUser] = useState<UserDetails>();
+  const currentUser = useAuthStore((state) => state.user);
+
   const [user, setUser] = useState<UserType>();
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("posts");
@@ -41,7 +39,7 @@ export const SingleUser = () => {
   }, []);
 
   return (
-    <MainLayout>
+    <MainLayout classNames="lg:w-1/4">
       {isLoading ? (
         <p>Loading user...</p>
       ) : (
@@ -50,10 +48,31 @@ export const SingleUser = () => {
             <p>User does not exist</p>
           ) : (
             <>
-              <div className="p-5 flex justify-between border-b">
-                <User user={user} />
-                <Follow followingId={user.id} />
+              <div className="p-5 flex flex-col border-b">
+                <div className="flex justify-between items-center">
+                  <User user={user} />
+                  {user.id === currentUser?.id ? (
+                    <div></div>
+                  ) : (
+                    <Follow followingId={user.id} />
+                  )}
+                </div>
+
+                {/* Bio and stats section */}
+                <div className="mt-4">
+                  <p className="text-xl font-semibold">{user.profileName}</p>
+                  <p className="text-gray-600 mt-1">{user.bio}</p>
+                  <div className="flex mt-2 space-x-4">
+                    <span className="text-gray-800 font-semibold">
+                      {user.followers.length} Followers
+                    </span>
+                    <span className="text-gray-800 font-semibold">
+                      {user.following.length} Following
+                    </span>
+                  </div>
+                </div>
               </div>
+
               <div className="flex flex-col h-full">
                 <div className="flex justify-around border-b">
                   <button

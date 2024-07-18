@@ -4,6 +4,7 @@ export type UserType = {
   email: string;
   profileName: string;
   profilePicture: string;
+  bio: string;
   isPremium: boolean;
   accessToken: string;
   posts: PostType[];

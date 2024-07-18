@@ -19,13 +19,24 @@ model User {
   email String @unique
   profileName String 
   password String 
+  bio String? 
   profilePicture String?
   isPremium Boolean @default(false)
   posts Post[]
+  bookmarks Bookmark[]
   comments Comment[]
   likes Like[]
   followers Follower[] @relation("Followers")
   following Follower[] @relation("Following")
+}
+
+model Bookmark {
+  id String @id @default(uuid())
+  userId String
+  postId String
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
 }
 
 model Post {
@@ -35,6 +46,7 @@ model Post {
   authorId String
   likes Like[]
   comments Comment[]
+  bookmarks Bookmark[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

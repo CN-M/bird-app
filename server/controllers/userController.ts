@@ -12,6 +12,7 @@ export const getUser = async (req: Request, res: Response) => {
       select: {
         profileName: true,
         id: true,
+        bio: true,
         posts: {
           select: {
             author: true,

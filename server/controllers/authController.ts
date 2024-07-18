@@ -1,4 +1,4 @@
-// import bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { prisma } from "../config/db";
@@ -6,7 +6,7 @@ import { generateAccessToken, generateRefreshToken } from "../config/util";
 
 require("dotenv").config();
 
-const { REFRESH_SECRET, NODE_ENV } = process.env;
+const { REFRESH_SECRET } = process.env;
 
 require("dotenv").config();
 
@@ -28,7 +28,7 @@ export const registerUser = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "User already exists" });
     }
 
-    // const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
     const newUser = await prisma.user.create({
       data: {
@@ -36,13 +36,12 @@ export const registerUser = async (req: Request, res: Response) => {
         email,
         username: lowercaseUsername,
         profilePicture: null,
-        // password: hashedPassword,
-        password,
+        password: hashedPassword,
       },
     });
 
     if (newUser) {
-      const { id, profileName, email, isPremium, profilePicture } = newUser;
+      const { id, profileName, isPremium, profilePicture } = newUser;
 
       const accessToken = generateAccessToken({
         id,
@@ -117,9 +116,7 @@ export const loginUser = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(400).json({ error: "Invalid credentials" });
     }
-    // Remember to change this back
-    // const passwordMatch = await bcrypt.compare(password, user.password!);
-    const passwordMatch = password === user.password!;
+    const passwordMatch = await bcrypt.compare(password, user.password!);
 
     if (!passwordMatch) {
       return res.status(400).json({ error: "Invalid credentials" });
@@ -131,7 +128,6 @@ export const loginUser = async (req: Request, res: Response) => {
       profileName,
       profilePicture,
       isPremium,
-      email,
     } = user;
 
     const accessToken = generateAccessToken({

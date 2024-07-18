@@ -10,6 +10,26 @@ import { useEffect, useState } from "react";
 import { rootURL } from "../lib/utils";
 import { PostType } from "../types";
 
+const shuffleArray = (array: PostType[]) => {
+  let currentIndex = array.length,
+    randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex !== 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // Swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+};
+
 export const Main = () => {
   const [generalFeedPosts, setGeneralFeedPosts] = useState<PostType[]>([]);
   const [userFeedPosts, setUserFeedPosts] = useState<PostType[]>([]);
@@ -29,8 +49,10 @@ export const Main = () => {
 
         const { data } = response;
 
-        setGeneralFeedPosts(data);
+        // Shuffle the posts before setting them
+        const shuffledPosts = shuffleArray(data);
 
+        setGeneralFeedPosts(shuffledPosts);
         setGeneralFeedIsLoading(false);
       } catch (err) {
         console.error("Error", err);
@@ -48,7 +70,11 @@ export const Main = () => {
 
         const { data } = response;
 
-        setUserFeedPosts(data.reverse());
+        // setUserFeedPosts(data.reverse());
+
+        // Shuffle the posts before setting them
+        const shuffledPosts = shuffleArray(data);
+        setUserFeedPosts(shuffledPosts);
 
         setUserFeedIsLoading(false);
       } catch (err) {
@@ -64,7 +90,7 @@ export const Main = () => {
   const [activeTab, setActiveTab] = useState("general");
 
   return (
-    <MainLayout classNames="lg:w-1/4 ">
+    <MainLayout classNames="lg:w-1/4">
       <PostInput
         generalFeedPosts={generalFeedPosts}
         userFeedPosts={userFeedPosts}

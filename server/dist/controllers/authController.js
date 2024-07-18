@@ -4,11 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.refreshUser = exports.logoutUser = exports.loginUser = exports.registerUser = void 0;
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const db_1 = require("../config/db");
 const util_1 = require("../config/util");
 require("dotenv").config();
-const { REFRESH_SECRET, NODE_ENV } = process.env;
+const { REFRESH_SECRET } = process.env;
 require("dotenv").config();
 const registerUser = async (req, res) => {
     try {
@@ -23,19 +24,18 @@ const registerUser = async (req, res) => {
         if (userExists) {
             return res.status(400).json({ error: "User already exists" });
         }
-        // const hashedPassword = await bcrypt.hash(password, 12);
+        const hashedPassword = await bcryptjs_1.default.hash(password, 12);
         const newUser = await db_1.prisma.user.create({
             data: {
                 profileName,
                 email,
                 username: lowercaseUsername,
                 profilePicture: null,
-                // password: hashedPassword,
-                password,
+                password: hashedPassword,
             },
         });
         if (newUser) {
-            const { id, profileName, email, isPremium, profilePicture } = newUser;
+            const { id, profileName, isPremium, profilePicture } = newUser;
             const accessToken = (0, util_1.generateAccessToken)({
                 id,
                 username,
@@ -102,13 +102,11 @@ const loginUser = async (req, res) => {
         if (!user) {
             return res.status(400).json({ error: "Invalid credentials" });
         }
-        // Remember to change this back
-        // const passwordMatch = await bcrypt.compare(password, user.password!);
-        const passwordMatch = password === user.password;
+        const passwordMatch = await bcryptjs_1.default.compare(password, user.password);
         if (!passwordMatch) {
             return res.status(400).json({ error: "Invalid credentials" });
         }
-        const { id, username: userUsername, profileName, profilePicture, isPremium, email, } = user;
+        const { id, username: userUsername, profileName, profilePicture, isPremium, } = user;
         const accessToken = (0, util_1.generateAccessToken)({
             id,
             username: userUsername,

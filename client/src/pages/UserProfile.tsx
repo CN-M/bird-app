@@ -43,7 +43,7 @@ export const UserProfile = () => {
   };
 
   return (
-    <MainLayout>
+    <MainLayout classNames="lg:w-1/4">
       {user ? (
         <div className="p-4">
           <div className="flex items-center space-x-4">
