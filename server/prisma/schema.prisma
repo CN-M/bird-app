@@ -15,7 +15,7 @@ datasource db {
 
 model User {
   id String @id @default(uuid())
-  username String @unique @db.VarChar(20)
+  username String @unique
   email String @unique
   profileName String 
   password String 
