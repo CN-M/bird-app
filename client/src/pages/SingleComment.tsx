@@ -13,7 +13,6 @@ import { CommentType } from "../types";
 import { Link } from "react-router-dom";
 
 import { FaTrash } from "react-icons/fa";
-import { Bookmark } from "../components/Bookmark";
 import { Like } from "../components/Like";
 import { Reply } from "../components/Reply";
 import { User } from "../components/User";
@@ -136,7 +135,6 @@ export const SingleComment = () => {
                               commentId={comment.id}
                               likes={comment.likes}
                             />
-                            <Bookmark commentId={comment.id} />
                           </div>
                           {user?.id === comment.authorId && (
                             <span
