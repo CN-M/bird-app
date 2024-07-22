@@ -21,6 +21,7 @@ export type PostType = {
   authorId: string;
   likes: LikeType[];
   comments: CommentType[];
+  bookmarks: BookmarkType[];
   createdAt: number;
   updatedAT: number;
 };
@@ -57,5 +58,14 @@ export type FollowType = {
   following: UserType;
   followerId: string;
   followingId: string;
+  createdAt: number;
+};
+
+export type BookmarkType = {
+  id: string;
+  user: UserType;
+  userId: string;
+  post: PostType;
+  postId: string;
   createdAt: number;
 };

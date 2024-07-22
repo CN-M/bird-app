@@ -14,6 +14,7 @@ import { catch404, errorHandler } from "./middleware/errorMiddleware";
 
 // Import Routes
 import authRoute from "./routes/authRoute";
+import bookmarkRoute from "./routes/bookmarkRoute";
 import commentRoute from "./routes/commentRoute";
 import likeRoute from "./routes/likeRoute";
 import postRoute from "./routes/postRoute";
@@ -65,6 +66,7 @@ app.use("/user", userRoute);
 app.use("/posts", postRoute);
 app.use("/comments", commentRoute);
 app.use("/likes", likeRoute);
+app.use("/bookmark", bookmarkRoute);
 
 // Error Middleware
 app.use(catch404);

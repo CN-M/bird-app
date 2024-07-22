@@ -5,7 +5,6 @@ import { useAuthStore } from "../lib/authStore";
 import { Link } from "react-router-dom";
 
 import { FaTrash } from "react-icons/fa";
-import { Bookmark } from "./Bookmark";
 import { Like } from "./Like";
 import { Reply } from "./Reply";
 import { User } from "./User";
@@ -110,7 +109,6 @@ export const Comment = ({
                     <div className="flex items-center space-x-2 text-gray-500">
                       <Reply comments={replies} />
                       <Like commentId={id} likes={likes} />
-                      <Bookmark commentId={id} />
                     </div>
                     {user?.id === authorId && (
                       <span

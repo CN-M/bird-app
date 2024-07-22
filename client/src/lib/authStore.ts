@@ -58,14 +58,32 @@ export const useAuthStore = create<AuthState>((set) => ({
   loginAsGuest: async () => {
     set({ isLoading: true, isError: false, errorMessage: "" });
     try {
-      const guestData = {
-        username: "batman",
-        password: "SUPERMAN-SUCKZ",
-      };
+      const guestData = [
+        {
+          username: "batman",
+          email: "bruce.wayne@wayneenterprises.com",
+          profileName: "Bruce Wayne",
+          password: "SUPERMAN-SUCKZ",
+        },
+        {
+          username: "superman",
+          email: "clark.kent@dailyplanet.com",
+          profileName: "Clark Kent",
+          password: "LoisLane123",
+        },
+        {
+          username: "wonderwoman",
+          email: "diana.prince@themyscira.gov",
+          profileName: "Diana Prince",
+          password: "SUPERMAN-SUCKZ",
+        },
+      ];
 
-      const data: UserType = await login(guestData);
+      const randomGuest = Math.floor(Math.random() * guestData.length);
+
+      const data: UserType = await login(guestData[randomGuest]);
       set({ isAuthenticated: true, user: data, isGuest: true });
-      toast.success("Successfully logged in!");
+      toast.success(`Logged in as ${guestData[randomGuest].profileName}`);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {

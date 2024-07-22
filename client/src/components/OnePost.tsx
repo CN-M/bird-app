@@ -16,7 +16,7 @@ export const OnePost = ({ post }: { post: PostType }) => {
 
   const user = useAuthStore((state) => state.user);
 
-  const { id, author, content, createdAt, comments, likes } = post;
+  const { id, author, content, createdAt, comments, likes, bookmarks } = post;
   const { username, id: authorId } = author;
 
   const handleDelete = async (
@@ -66,7 +66,7 @@ export const OnePost = ({ post }: { post: PostType }) => {
             <div className="flex items-center space-x-2 text-gray-500">
               <Reply comments={comments} />
               <Like likes={likes} postId={id} />
-              <Bookmark postId={id} />
+              <Bookmark postId={id} bookmarks={bookmarks} />
             </div>
             {user?.id === authorId && (
               <span

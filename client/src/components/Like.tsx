@@ -30,7 +30,6 @@ export const Like = ({
   const [liked, setLiked] = useState(hasLiked);
 
   const [likeIsLoading, setLikeIsLoading] = useState(false);
-  const [unlikeIsLoading, setUnlikeIsLoading] = useState(false);
 
   const handleLike = async (
     e: React.MouseEvent<HTMLSpanElement, MouseEvent>
@@ -61,8 +60,6 @@ export const Like = ({
 
       setTotalLikes(totalLikes);
       setLiked(!liked);
-
-      setLikeIsLoading(false);
     } finally {
       setLikeIsLoading(false);
     }
@@ -78,7 +75,7 @@ export const Like = ({
     setTotalLikes(newTotalLikes);
     setLiked(!liked);
 
-    setUnlikeIsLoading(true);
+    setLikeIsLoading(true);
     try {
       if (!user || !user.accessToken) {
         throw new Error("User not authenticated or token not available.");
@@ -93,10 +90,8 @@ export const Like = ({
 
       setTotalLikes(totalLikes);
       setLiked(!liked);
-
-      setUnlikeIsLoading(false);
     } finally {
-      setUnlikeIsLoading(false);
+      setLikeIsLoading(false);
     }
   };
 
@@ -106,7 +101,7 @@ export const Like = ({
         <span
           onClick={handleUnlike}
           // onClick={handleLike}
-          aria-disabled={unlikeIsLoading}
+          aria-disabled={likeIsLoading}
           className="flex items-center justify-center gap-1 text-red-500 hover:bg-red-500/25 hover: rounded-full px-2 cursor-pointer"
         >
           {totalLikes}

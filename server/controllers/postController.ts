@@ -16,6 +16,12 @@ export const getGeneralFeed = async (req: Request, res: Response) => {
             username: true,
           },
         },
+        bookmarks: {
+          select: {
+            postId: true,
+            userId: true,
+          },
+        },
         comments: {
           select: {
             author: { select: { username: true, profilePicture: true } },
@@ -120,6 +126,12 @@ export const getFollowingFeed = async (req: Request, res: Response) => {
             username: true,
           },
         },
+        bookmarks: {
+          select: {
+            postId: true,
+            userId: true,
+          },
+        },
         comments: {
           select: {
             author: { select: { username: true, profilePicture: true } },
@@ -155,7 +167,6 @@ export const getSingleUserFeed = async (req: Request, res: Response) => {
   try {
     const posts = await prisma.post.findMany({
       where: { author: { username } },
-      take: 10,
       select: {
         author: {
           select: {
@@ -166,7 +177,12 @@ export const getSingleUserFeed = async (req: Request, res: Response) => {
             username: true,
           },
         },
-
+        bookmarks: {
+          select: {
+            postId: true,
+            userId: true,
+          },
+        },
         comments: {
           select: {
             author: { select: { username: true, profilePicture: true } },
@@ -207,6 +223,12 @@ export const getSinglePost = async (req: Request, res: Response) => {
             isPremium: true,
             profilePicture: true,
             username: true,
+          },
+        },
+        bookmarks: {
+          select: {
+            postId: true,
+            userId: true,
           },
         },
         comments: {

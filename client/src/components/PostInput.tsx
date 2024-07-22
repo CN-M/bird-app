@@ -45,6 +45,7 @@ export const PostInput = ({
         createdAt: Date.now(),
         likes: [],
         updatedAT: Date.now(),
+        bookmarks: [],
       };
 
       setGeneralFeedPosts([newPost, ...genFeed]);
