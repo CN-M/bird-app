@@ -30,7 +30,7 @@ export const LoginForm = () => {
   return (
     <div className="flex flex-col items-center p-10 space-y-5">
       <h2 className="text-2xl font-sans font-semibold">
-        Log in to make the best of Task Taker
+        Log in to make the best of Bird App
       </h2>
       <div className="flex flex-col items-center">
         <form onSubmit={handleLogin} className="flex flex-col space-y-3">

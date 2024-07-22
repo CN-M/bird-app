@@ -35,7 +35,7 @@ export const SignUpForm = () => {
         Don't have an account?
       </h2>
       <h2 className="text-2xl font-sans font-semibold">
-        Sign up to make the best of Task Taker
+        Sign up to make the best of Bird App
       </h2>
       <div className="flex flex-col items-center">
         <form onSubmit={handleRegister} className="flex flex-col space-y-3">
