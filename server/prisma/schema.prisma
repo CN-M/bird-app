@@ -28,6 +28,7 @@ model User {
   likes Like[]
   followers Follower[] @relation("Followers")
   following Follower[] @relation("Following")
+  @@index([username, id])
 }
 
 model Bookmark {
@@ -37,6 +38,7 @@ model Bookmark {
   user User @relation(fields: [userId], references: [id])
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
+  @@index([userId, postId])
 }
 
 model Post {
@@ -49,6 +51,7 @@ model Post {
   bookmarks Bookmark[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@index([authorId])
 }
 
 model Comment {
@@ -64,6 +67,7 @@ model Comment {
   likes Like[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@index([postId])
 }
 
 model Like {
@@ -75,6 +79,8 @@ model Like {
   comment Comment? @relation(fields: [commentId], references: [id])
   commentId String?
   createdAt DateTime @default(now())
+  @@index([postId])
+  @@index([commentId])
 }
 
 model Follower {
@@ -84,4 +90,5 @@ model Follower {
   followerId String
   followingId String
   createdAt DateTime @default(now())
+  @@index([followerId, followingId])
 }
