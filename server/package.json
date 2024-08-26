@@ -23,7 +23,8 @@
     "helmet": "^7.1.0",
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^9.0.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "redis": "^4.7.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",

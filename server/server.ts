@@ -8,6 +8,14 @@ import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
 
+import { redisClient } from "./config/redis";
+
+(async () => {
+  redisClient.on("error", (err) => console.error("Redis Client Error", err));
+  redisClient.on("ready", () => console.log("Redis Client Ready".magenta));
+  await redisClient.connect();
+})();
+
 dotenv.config();
 
 import { catch404, errorHandler } from "./middleware/errorMiddleware";

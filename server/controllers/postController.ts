@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../config/db";
+import { redisClient } from "../config/redis";
 
 // Do not need to be authed to see these
 export const getGeneralFeed = async (req: Request, res: Response) => {
@@ -76,40 +77,6 @@ export const getFollowingFeed = async (req: Request, res: Response) => {
 
     const followingIds = following.map((user) => user.followingId);
 
-    // const userPosts = await prisma.post.findMany({
-    //   where: {
-    //     authorId: userId,
-    //   },
-    //   select: {
-    //     author: {
-    //       select: {
-    //         id: true,
-    //         profileName: true,
-    //         isPremium: true,
-    //         profilePicture: true,
-    //         username: true,
-    //       },
-    //     },
-    //     comments: {
-    //       select: {
-    //         author: { select: { username: true, profilePicture: true } },
-    //         content: true,
-    //         id: true,
-    //         parentCommentId: true,
-    //         likes: true,
-    //         createdAt: true,
-    //         postId: true,
-    //         replies: true,
-    //       },
-    //     },
-
-    //     content: true,
-    //     likes: true,
-    //     createdAt: true,
-    //     id: true,
-    //   },
-    // });
-
     const posts = await prisma.post.findMany({
       where: {
         author: {
@@ -152,7 +119,12 @@ export const getFollowingFeed = async (req: Request, res: Response) => {
       },
     });
 
-    // res.status(200).json([...userPosts, ...posts]);
+    await redisClient.set(`following_feed:${userId}`, JSON.stringify(posts), {
+      EX: 300,
+    });
+
+    console.log("Data cached to Redis");
+
     res.status(200).json(posts);
   } catch (err) {
     console.error("Error fetching posts:", err);
@@ -289,6 +261,9 @@ export const createPost = async (req: Request, res: Response) => {
       },
     });
 
+    await redisClient.del(`following_feed:${userId}`);
+    console.log("Redis Cache Invalidated");
+
     res.status(200).json(newPost);
   } catch (err) {
     console.error("Error creating post:", err);
@@ -331,6 +306,9 @@ export const updatePost = async (req: Request, res: Response) => {
       },
     });
 
+    await redisClient.del(`following_feed:${userId}`);
+    console.log("Redis Cache Invalidated");
+
     res.status(200).json(updatedPost);
   } catch (err) {
     console.error("Error updating post:", err);
@@ -364,6 +342,9 @@ export const deletePost = async (req: Request, res: Response) => {
     const deletedPost = await prisma.post.delete({
       where: { id },
     });
+
+    await redisClient.del(`following_feed:${userId}`);
+    console.log("Redis Cache Invalidated");
 
     res.status(200).json({ message: "Post deleted", post: deletedPost });
   } catch (err) {

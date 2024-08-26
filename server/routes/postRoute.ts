@@ -12,19 +12,17 @@ import {
   updatePost,
 } from "../controllers/postController";
 import { protect } from "../middleware/authMiddleware";
+import { cache } from "../middleware/cacheMiddleware";
 
-router
-  .route("/")
-  .get(getGeneralFeed) // X
-  .post(protect, createPost);
+router.route("/").get(getGeneralFeed).post(protect, createPost);
 
-router.route("/feed").get(protect, getFollowingFeed); // X
+router.route("/feed").get(protect, cache, getFollowingFeed);
 
-router.route("/:username/feed").get(getSingleUserFeed); // X
+router.route("/:username/feed").get(getSingleUserFeed);
 
 router
   .route("/:username/:postId")
-  .get(getSinglePost) // ${rootURL}/posts/${userId}/${postId} // X
+  .get(getSinglePost) // ${rootURL}/posts/${userId}/${postId}
   .put(protect, updatePost)
   .delete(protect, deletePost);
 

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../config/db";
+import { redisClient } from "../config/redis";
 
 export const getPostLikes = async (req: Request, res: Response) => {
   const { postId } = req.body;
@@ -72,6 +73,9 @@ export const likePost = async (req: Request, res: Response) => {
       },
     });
 
+    await redisClient.del(`following_posts:${userId}`);
+    console.log("Redis Cache Invalidated");
+
     res.status(200).json(newLike);
   } catch (err) {
     console.error("Error liking post", err);
@@ -106,6 +110,9 @@ export const unlikePost = async (req: Request, res: Response) => {
     const deletedLike = await prisma.like.delete({
       where: { id },
     });
+
+    await redisClient.del(`following_posts:${userId}`);
+    console.log("Redis Cache Invalidated");
 
     res
       .status(200)
