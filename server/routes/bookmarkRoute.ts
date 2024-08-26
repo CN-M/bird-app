@@ -9,6 +9,7 @@ import {
   unbookmarkPost,
 } from "../controllers/bookmarkController";
 import { protect } from "../middleware/authMiddleware";
+import { cacheBookmarks } from "../middleware/cacheMiddleware";
 
 router
   .route("/:postId/post")
@@ -16,6 +17,6 @@ router
   .post(protect, bookmarkPost)
   .delete(protect, unbookmarkPost);
 
-router.route("/:username").get(protect, getUserBookmarks);
+router.route("/:username").get(protect, cacheBookmarks, getUserBookmarks);
 
 export default router;

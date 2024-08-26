@@ -64,14 +64,12 @@ export const getFollowingFeed = async (req: Request, res: Response) => {
 
   try {
     const following = await prisma.follower.findMany({
-      // where: { followingId: userId },
       where: { followerId: userId },
       select: { followingId: true },
       orderBy: { createdAt: "desc" },
     });
 
     if (!following || following.length === 0) {
-      // return res.status(400).json();
       return res.status(200).json([]);
     }
 
@@ -174,6 +172,14 @@ export const getSingleUserFeed = async (req: Request, res: Response) => {
       },
     });
 
+    await redisClient.set(
+      `single_user_feed:${username}`,
+      JSON.stringify(posts),
+      {
+        EX: 300,
+      }
+    );
+
     res.status(200).json(posts);
   } catch (err) {
     console.error("Error fetching posts:", err);
@@ -231,6 +237,10 @@ export const getSinglePost = async (req: Request, res: Response) => {
       },
     });
 
+    await redisClient.set(`single_post:${postId}`, JSON.stringify(post), {
+      EX: 300,
+    });
+
     if (!post) {
       res.status(400).json({ error: "Post not found" });
     } else {
@@ -251,7 +261,7 @@ export const createPost = async (req: Request, res: Response) => {
       .json({ error: "Not authoriized, please login or register" });
   }
   const { content } = req.body;
-  const { id: userId } = user;
+  const { id: userId, username } = user;
 
   try {
     const newPost = await prisma.post.create({
@@ -262,6 +272,8 @@ export const createPost = async (req: Request, res: Response) => {
     });
 
     await redisClient.del(`following_feed:${userId}`);
+    await redisClient.del(`single_user_feed:${username}`);
+
     console.log("Redis Cache Invalidated");
 
     res.status(200).json(newPost);
@@ -286,7 +298,7 @@ export const updatePost = async (req: Request, res: Response) => {
 
   const { postId } = req.params;
   const { content } = req.body;
-  const { id: userId } = user;
+  const { id: userId, username } = user;
 
   try {
     const post = await prisma.post.findFirst({
@@ -307,6 +319,7 @@ export const updatePost = async (req: Request, res: Response) => {
     });
 
     await redisClient.del(`following_feed:${userId}`);
+    await redisClient.del(`single_user_feed:${username}`);
     console.log("Redis Cache Invalidated");
 
     res.status(200).json(updatedPost);
@@ -326,7 +339,7 @@ export const deletePost = async (req: Request, res: Response) => {
   }
 
   const { postId } = req.params;
-  const { id: userId } = user;
+  const { id: userId, username } = user;
 
   try {
     const post = await prisma.post.findFirst({
@@ -344,6 +357,7 @@ export const deletePost = async (req: Request, res: Response) => {
     });
 
     await redisClient.del(`following_feed:${userId}`);
+    await redisClient.del(`single_user_feed:${username}`);
     console.log("Redis Cache Invalidated");
 
     res.status(200).json({ message: "Post deleted", post: deletedPost });

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../config/db";
+import { redisClient } from "../config/redis";
 
 export const getPostBookmarks = async (req: Request, res: Response) => {
   const { postId } = req.params;
@@ -75,6 +76,10 @@ export const getUserBookmarks = async (req: Request, res: Response) => {
       },
     });
 
+    await redisClient.set(`bookmarks:${userId}`, JSON.stringify(bookmarks), {
+      EX: 300,
+    });
+
     res.status(200).json(bookmarks);
   } catch (err) {
     console.error("Error fetching posts:", err);
@@ -111,6 +116,9 @@ export const bookmarkPost = async (req: Request, res: Response) => {
       },
     });
 
+    await redisClient.del(`bookmarks:${userId}`);
+    console.log("Redis Cache Invalidated");
+
     res.status(200).json(newbookmark);
   } catch (err) {
     console.error("Error bookmarking post", err);
@@ -144,6 +152,9 @@ export const unbookmarkPost = async (req: Request, res: Response) => {
     const deletedBookmark = await prisma.bookmark.delete({
       where: { id },
     });
+
+    await redisClient.del(`bookmarks:${userId}`);
+    console.log("Redis Cache Invalidated");
 
     res
       .status(200)

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../config/db";
+import { redisClient } from "../config/redis";
 
 require("dotenv").config();
 
@@ -40,6 +41,10 @@ export const getUser = async (req: Request, res: Response) => {
         followers: true,
         following: true,
       },
+    });
+
+    await redisClient.set(`user:${username}`, JSON.stringify(user), {
+      EX: 300,
     });
 
     res.status(200).json(user);
@@ -237,6 +242,14 @@ export const getFollowSuggestions = async (req: Request, res: Response) => {
       },
     });
 
+    await redisClient.set(
+      `suggestions:${userId}`,
+      JSON.stringify(suggestions),
+      {
+        EX: 300,
+      }
+    );
+
     res.status(200).json(suggestions);
   } catch (err) {
     console.error("Error following user", err);
@@ -272,6 +285,8 @@ export const followUser = async (req: Request, res: Response) => {
       },
     });
 
+    await redisClient.del(`suggestions:${userId}`);
+
     res.status(200).json(newFollow);
   } catch (err) {
     console.error("Error following user", err);
@@ -305,6 +320,8 @@ export const unfollowUser = async (req: Request, res: Response) => {
     const deletedFollow = await prisma.follower.delete({
       where: { id },
     });
+
+    await redisClient.del(`suggestions:${userId}`);
 
     res.status(200).json(deletedFollow);
   } catch (err) {
