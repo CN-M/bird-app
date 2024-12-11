@@ -122,4 +122,3 @@ This project is licensed under the **MIT License**. Goodluck navigating my sphag
 
 ## 💖 Acknowledgments
 - Special thanks to the creators of the libraries and frameworks used in this project.
-```
