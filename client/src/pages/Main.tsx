@@ -113,7 +113,7 @@ export const Main = () => {
           </button>
         </div>
         {/* <div className="p-4 flex-grow overflow-y-auto"> */}
-        <div className="p-4 flex-grow">
+        <div className="p-4 flex-grow ">
           {activeTab === "general" && (
             <GeneralFeed
               generalFeedPosts={generalFeedPosts}

@@ -11,7 +11,7 @@ export const MainLayout = ({
   return (
     <div className="flex space-x-5 justify-center h-full w-full overflow-y-auto">
       {/* Sidebar container */}
-      <div className="w-1/4 h-full hidden lg:block">
+      <div className="sticky top-0 w-1/4 h-full hidden lg:block">
         <UserPanel />
       </div>
 
@@ -23,7 +23,7 @@ export const MainLayout = ({
       </div>
 
       {/* Right spacer to center content if needed */}
-      <div className="w-1/4 h-full hidden lg:block">
+      <div className="sticky top-0 w-1/4 h-full hidden lg:block">
         <SuggestedFollows />
       </div>
     </div>

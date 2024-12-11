@@ -3,10 +3,11 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import express, { Express } from "express";
+import express, { Express, Request, Response } from "express";
 import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
+import Stripe from "stripe";
 
 import { redisClient } from "./config/redis";
 
@@ -28,16 +29,21 @@ import likeRoute from "./routes/likeRoute";
 import postRoute from "./routes/postRoute";
 import userRoute from "./routes/userRoute";
 
-const { PORT, NODE_ENV, CLIENT_ROOT_URL } = process.env;
+const { PORT, NODE_ENV, CLIENT_ROOT_URL, STRIPE_SECRET_KEY } = process.env;
 const port = PORT || 3000;
 
 const app: Express = express();
+const stripe = new Stripe(STRIPE_SECRET_KEY!, {
+  apiVersion: "2024-06-20",
+});
+
 app.set("trust proxy", 1);
 
 const allowedOrigins = [
   CLIENT_ROOT_URL,
   "http://localhost:5173",
   "http://127.0.0.1:5173",
+  "http://127.0.0.1:6379",
 ];
 
 const limiter = rateLimit({
@@ -75,6 +81,23 @@ app.use("/posts", postRoute);
 app.use("/comments", commentRoute);
 app.use("/likes", likeRoute);
 app.use("/bookmark", bookmarkRoute);
+
+app.post("/create-payment-intent", async (req: Request, res: Response) => {
+  const { amount } = req.body;
+
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency: "usd",
+    });
+
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (error) {
+    res.status(400).json({ error: error });
+  }
+});
 
 // Error Middleware
 app.use(catch404);

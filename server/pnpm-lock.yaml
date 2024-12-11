@@ -47,6 +47,9 @@ importers:
       redis:
         specifier: ^4.7.0
         version: 4.7.0
+      stripe:
+        specifier: ^16.9.0
+        version: 16.9.0
     devDependencies:
       '@faker-js/faker':
         specifier: ^8.4.1
@@ -685,6 +688,10 @@ packages:
   strip-ansi@6.0.1:
     resolution: {integrity: sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==}
     engines: {node: '>=8'}
+
+  stripe@16.9.0:
+    resolution: {integrity: sha512-SgzwdMgWNe1FD1A1WevZ/wuv8b4yWz8SiG/vO7Pf4cBl0qat20Clz8Zself+tcbB+fuMkZJrjJ2WmarIgXfCow==}
+    engines: {node: '>=12.*'}
 
   supports-color@7.2.0:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
@@ -1397,6 +1404,11 @@ snapshots:
   strip-ansi@6.0.1:
     dependencies:
       ansi-regex: 5.0.1
+
+  stripe@16.9.0:
+    dependencies:
+      '@types/node': 20.14.10
+      qs: 6.11.0
 
   supports-color@7.2.0:
     dependencies:

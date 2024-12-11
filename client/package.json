@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@redux-devtools/extension": "^3.3.0",
+    "@stripe/react-stripe-js": "^2.8.0",
+    "@stripe/stripe-js": "^4.4.0",
     "axios": "^1.6.8",
     "clsx": "^2.1.0",
     "react": "^18.2.0",

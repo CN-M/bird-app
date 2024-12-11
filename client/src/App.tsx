@@ -20,7 +20,8 @@ function App() {
   return (
     <>
       <Router>
-        <div className="h-screen w-screen flex flex-col justify-between items-center space-y-4">
+        {/* <div className="h-screen w-screen flex flex-col justify-between items-center space-y-4"> */}
+        <div className="min-h-screen w-full flex flex-col justify-between items-center space-y-4">
           <Navbar />
           <Routes>
             <Route path="/" element={<Main />} />
