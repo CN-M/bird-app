@@ -6,8 +6,10 @@ import dotenv from "dotenv";
 import express, { Express, Request, Response } from "express";
 import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
+import http from "http"; // To create a server for Express and WebSocket
 import morgan from "morgan";
 import Stripe from "stripe";
+import WebSocket, { Server } from "ws";
 
 import { redisClient } from "./config/redis";
 
@@ -48,7 +50,7 @@ const allowedOrigins = [
 
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  limit: 250, // Limit each IP to  requests per `window` (here, per 1 minute).
+  limit: 250, // Limit each IP to requests per `window` (here, per 1 minute).
   standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
   legacyHeaders: false,
 });
@@ -103,6 +105,77 @@ app.post("/create-payment-intent", async (req: Request, res: Response) => {
 app.use(catch404);
 app.use(errorHandler);
 
-app.listen(port, () => {
+// Create HTTP server for Express and WebSocket
+const server = http.createServer(app);
+
+const wss = new Server({ port: 3000 });
+
+const users: Map<WebSocket, { username: string }> = new Map(); // Track users and their WebSocket connection
+
+wss.on("connection", (ws: WebSocket) => {
+  console.log("New connection established");
+
+  ws.on("message", (message: string) => {
+    const data = JSON.parse(message);
+
+    switch (data.type) {
+      case "join":
+        // Save the user's username when they join
+        users.set(ws, { username: data.username });
+        console.log(`${data.username} joined the chat`);
+        break;
+
+      case "message":
+        // Handle sending a message to a private room
+        const { content, toUsername } = data;
+        const fromUser = users.get(ws)?.username;
+
+        if (fromUser && toUsername) {
+          // Find the recipient WebSocket connection by username
+          for (let [socket, user] of users.entries()) {
+            if (user.username === toUsername) {
+              // Send the message to the recipient
+              socket.send(
+                JSON.stringify({
+                  type: "message",
+                  content,
+                  username: fromUser,
+                  toUsername,
+                })
+              );
+              // Optionally send a confirmation to the sender
+              ws.send(
+                JSON.stringify({
+                  type: "message",
+                  content,
+                  username: fromUser,
+                  toUsername,
+                })
+              );
+            }
+          }
+        }
+        break;
+
+      case "leave":
+        // Remove the user from the connection map when they leave
+        users.delete(ws);
+        console.log(`${data.username} left the chat`);
+        break;
+    }
+  });
+
+  ws.on("close", () => {
+    // Clean up the user when the connection closes
+    users.forEach((user, socket) => {
+      if (socket === ws) {
+        users.delete(socket);
+      }
+    });
+    console.log("Connection closed");
+  });
+});
+
+server.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`.cyan);
 });
