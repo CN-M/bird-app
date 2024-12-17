@@ -63,7 +63,7 @@ export const editUserProfile = async (req: Request, res: Response) => {
       .json({ error: "Not authoriized, please login or register" });
   }
 
-  const { profileName, profilePicture } = req.body;
+  const { profileName, profilePicture, bio } = req.body;
   const { username } = req.params;
 
   try {
@@ -72,6 +72,7 @@ export const editUserProfile = async (req: Request, res: Response) => {
       data: {
         profileName,
         profilePicture,
+        bio,
       },
       select: { profileName: true, email: true },
     });
