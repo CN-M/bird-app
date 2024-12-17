@@ -1,32 +1,24 @@
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { GeneralFeed } from "../components/GeneralFeed";
 import { MainLayout } from "../components/MainLayout";
 import { PostInput } from "../components/PostInput";
 import { UserFeed } from "../components/UserFeed";
-
 import { useAuthStore } from "../lib/authStore";
-
-import { useEffect, useState } from "react";
 import { rootURL } from "../lib/utils";
 import { PostType } from "../types";
 
 const shuffleArray = (array: PostType[]) => {
   let currentIndex = array.length,
     randomIndex;
-
-  // While there remain elements to shuffle.
   while (currentIndex !== 0) {
-    // Pick a remaining element.
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
-
-    // Swap it with the current element.
     [array[currentIndex], array[randomIndex]] = [
       array[randomIndex],
       array[currentIndex],
     ];
   }
-
   return array;
 };
 
@@ -40,52 +32,34 @@ export const Main = () => {
   const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
-    const getGeneralFeed = async () => {
+    const getFeeds = async () => {
       setGeneralFeedIsLoading(true);
-      try {
-        const response = await axios.get(`${rootURL}/posts`, {
-          withCredentials: true,
-        });
-
-        const { data } = response;
-
-        // Shuffle the posts before setting them
-        const shuffledPosts = shuffleArray(data);
-
-        setGeneralFeedPosts(shuffledPosts);
-        setGeneralFeedIsLoading(false);
-      } catch (err) {
-        console.error("Error", err);
-        setGeneralFeedIsLoading(false);
-      }
-    };
-
-    const getUserFeed = async () => {
       setUserFeedIsLoading(true);
+
       try {
-        const response = await axios.get(`${rootURL}/posts/feed`, {
-          withCredentials: true,
-          headers: { Authorization: `Bearer ${user?.accessToken}` },
-        });
+        const [generalResponse, userResponse] = await Promise.all([
+          axios.get(`${rootURL}/posts`, { withCredentials: true }),
+          axios.get(`${rootURL}/posts/feed`, {
+            withCredentials: true,
+            headers: { Authorization: `Bearer ${user?.accessToken}` },
+          }),
+        ]);
 
-        const { data } = response;
+        const generalPosts = shuffleArray(generalResponse.data);
+        const userPosts = shuffleArray(userResponse.data);
 
-        // setUserFeedPosts(data.reverse());
-
-        // Shuffle the posts before setting them
-        const shuffledPosts = shuffleArray(data);
-        setUserFeedPosts(shuffledPosts);
-
-        setUserFeedIsLoading(false);
+        setGeneralFeedPosts(generalPosts);
+        setUserFeedPosts(userPosts);
       } catch (err) {
         console.error("Error", err);
+      } finally {
+        setGeneralFeedIsLoading(false);
         setUserFeedIsLoading(false);
       }
     };
 
-    getGeneralFeed();
-    getUserFeed();
-  }, []);
+    getFeeds();
+  }, [user?.accessToken]);
 
   const [activeTab, setActiveTab] = useState("general");
 
@@ -112,8 +86,7 @@ export const Main = () => {
             Following
           </button>
         </div>
-        {/* <div className="p-4 flex-grow overflow-y-auto"> */}
-        <div className="p-4 flex-grow ">
+        <div className="p-4 flex-grow">
           {activeTab === "general" && (
             <GeneralFeed
               generalFeedPosts={generalFeedPosts}
