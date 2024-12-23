@@ -13,7 +13,7 @@ export const Messages = () => {
     if (!user) return;
 
     // Establish WebSocket connection
-    const ws = new WebSocket("ws://localhost:3001");
+    const ws = new WebSocket("ws://localhost:3000");
 
     ws.onopen = () => {
       console.log("Connected to WebSocket server");
