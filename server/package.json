@@ -25,7 +25,8 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "redis": "^4.7.0",
-    "stripe": "^16.9.0"
+    "stripe": "^16.9.0",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
@@ -38,6 +39,7 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.14.8",
+    "@types/ws": "^8.5.13",
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.5",
     "prisma": "5.15.1",

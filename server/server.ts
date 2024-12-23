@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 import express, { Express, Request, Response } from "express";
 import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
-import http from "http"; // To create a server for Express and WebSocket
+import http from "http";
 import morgan from "morgan";
 import Stripe from "stripe";
 import WebSocket, { Server } from "ws";

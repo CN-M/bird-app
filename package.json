@@ -1,5 +1,5 @@
 {
-  "name": "task-taker-2.0",
+  "name": "bird-app",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -17,11 +17,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/ws": "^8.5.13",
     "concurrently": "^8.2.2",
     "prettier": "^3.3.2"
-  },
-  "dependencies": {
-    "ws": "^8.18.0"
   }
 }
