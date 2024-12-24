@@ -108,7 +108,7 @@ app.use(errorHandler);
 // Create HTTP server for Express and WebSocket
 const server = http.createServer(app);
 
-const wss = new Server({ port: 3000 });
+const wss = new Server({ port: 3001 });
 
 const users: Map<WebSocket, { username: string }> = new Map(); // Track users and their WebSocket connection
 
