@@ -44,6 +44,7 @@ app.set("trust proxy", 1);
 const allowedOrigins = [
   CLIENT_ROOT_URL,
   "http://localhost:5173",
+  "https://bird-app.up.railway.app",
   "http://127.0.0.1:5173",
   "http://127.0.0.1:6379",
 ];
