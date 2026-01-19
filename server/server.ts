@@ -3,7 +3,7 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import express, { Express, Request, Response } from "express";
+import express, { type Express } from "express";
 import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -11,9 +11,9 @@ import morgan from "morgan";
 import { redisClient } from "./config/redis";
 
 (async () => {
-  redisClient.on("error", (err) => console.error("Redis Client Error", err));
-  redisClient.on("ready", () => console.log("Redis Client Ready".magenta));
-  await redisClient.connect();
+	redisClient.on("error", (err) => console.error("Redis Client Error", err));
+	redisClient.on("ready", () => console.log("Redis Client Ready".magenta));
+	await redisClient.connect();
 })();
 
 dotenv.config();
@@ -36,40 +36,50 @@ const app: Express = express();
 app.set("trust proxy", 1);
 
 const allowedOrigins = [
-  CLIENT_ROOT_URL,
-  "http://localhost:5173",
-  "http://localhost:4173",
-  "https://bird-app.up.railway.app",
-  "http://127.0.0.1:5173",
-  "http://127.0.0.1:6379",
+	CLIENT_ROOT_URL,
+	"http://localhost:5173",
+	"http://localhost:4173",
+	"https://bird-app.up.railway.app",
+	"http://127.0.0.1:5173",
+	"http://127.0.0.1:6379",
 ];
 
 const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  limit: 250, // Limit each IP to requests per `window` (here, per 1 minute).
-  standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-  legacyHeaders: false,
+	windowMs: 1 * 60 * 1000, // 1 minute
+	limit: 250, // Limit each IP to requests per `window` (here, per 1 minute).
+	standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+	legacyHeaders: false,
 });
 
 const isProd = NODE_ENV !== "development";
+const isVercelPreview = (origin: string) =>
+	/^https:\/\/.*\.vercel\.app$/.test(origin);
 
 // Middleware
 if (isProd) app.use(limiter);
 app.use(morgan(isProd ? "combined" : "dev"));
 app.use(cookieParser());
 app.use(
-  cors({
-    origin: (origin, callback) => {
-      console.log({ origin })
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  })
+	cors({
+		origin: (origin, callback) => {
+			console.log("CORS origin:", origin);
+
+			if (
+				!origin || // same-origin / server-to-server
+				allowedOrigins.includes(origin) ||
+				isVercelPreview(origin)
+			) {
+				callback(null, true);
+			} else {
+				callback(new Error(`CORS blocked origin: ${origin}`));
+			}
+		},
+		credentials: true,
+		methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+		allowedHeaders: ["Content-Type", "Authorization"],
+	}),
 );
+app.options("*", cors());
 
 app.use(helmet());
 app.use(compression());
@@ -88,5 +98,5 @@ app.use(catch404);
 app.use(errorHandler);
 
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`.cyan);
+	console.log(`Server running on http://localhost:${port}`.cyan);
 });
