@@ -36,7 +36,8 @@ const app: Express = express();
 app.set("trust proxy", 1);
 
 const allowedOrigins = [
-	CLIENT_ROOT_URL,
+	// CLIENT_ROOT_URL,
+	"https://bird-app-nu.vercel.app",
 	"http://localhost:5173",
 	"http://localhost:4173",
 	"https://bird-app.up.railway.app",
