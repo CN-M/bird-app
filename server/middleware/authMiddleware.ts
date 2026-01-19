@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response } from "express";
-import jwt, { JwtPayload, TokenExpiredError } from "jsonwebtoken";
+import type { NextFunction, Request, Response } from "express";
+import jwt, { type JwtPayload, TokenExpiredError } from "jsonwebtoken";
 import { prisma } from "../config/db";
 
 import { generateAccessToken } from "../config/util";
@@ -9,96 +9,95 @@ require("dotenv").config();
 const { SECRET, REFRESH_SECRET } = process.env;
 
 declare global {
-  namespace Express {
-    interface User {
-      id: string;
-      profileName: string;
-      profilePictrue?: string | null;
-      username: string;
-      isPremium: boolean;
-      email: string;
-    }
+	namespace Express {
+		interface User {
+			id: string;
+			profileName: string;
+			profilePictrue?: string | null;
+			username: string;
+			isPremium: boolean;
+			email: string;
+		}
 
-    interface Request {
-      user?: User;
-    }
-  }
+		interface Request {
+			user?: User;
+		}
+	}
 }
 
 export const protect = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+	req: Request,
+	res: Response,
+	next: NextFunction,
 ) => {
-  let accessToken =
-    req.headers.authorization && req.headers.authorization.startsWith("Bearer")
-      ? req.headers.authorization.split(" ")[1]
-      : null;
+	const accessToken = req.headers.authorization?.startsWith("Bearer")
+		? req.headers.authorization.split(" ")[1]
+		: null;
 
-  let refreshToken = req.cookies["refreshToken"]
-    ? req.cookies["refreshToken"]
-    : null;
+	const refreshToken = req.cookies.refreshToken
+		? req.cookies.refreshToken
+		: null;
 
-  if (!accessToken || !refreshToken) {
-    return res.status(401).json({ error: "Not authorized, no tokens" });
-  }
+	if (!accessToken || !refreshToken) {
+		return res.status(401).json({ error: "Not authorized, no tokens" });
+	}
 
-  try {
-    const { id } = jwt.verify(accessToken, SECRET!) as JwtPayload;
+	try {
+		const { id } = jwt.verify(accessToken, SECRET!) as JwtPayload;
 
-    const user = await prisma.user.findFirst({
-      where: { id },
-      select: {
-        id: true,
-        username: true,
-        profileName: true,
-        profilePicture: true,
-        isPremium: true,
-        email: true,
-        password: false,
-      },
-    });
+		const user = await prisma.user.findFirst({
+			where: { id },
+			select: {
+				id: true,
+				username: true,
+				profileName: true,
+				profilePicture: true,
+				isPremium: true,
+				email: true,
+				password: false,
+			},
+		});
 
-    if (!user) {
-      return res.status(400).json({ error: "User not found" });
-    }
+		if (!user) {
+			return res.status(400).json({ error: "User not found" });
+		}
 
-    req.user = user;
-    next();
-  } catch (err) {
-    if (err instanceof TokenExpiredError) {
-      try {
-        const { id } = jwt.verify(refreshToken, REFRESH_SECRET!) as JwtPayload;
+		req.user = user;
+		next();
+	} catch (err) {
+		if (err instanceof TokenExpiredError) {
+			try {
+				const { id } = jwt.verify(refreshToken, REFRESH_SECRET!) as JwtPayload;
 
-        const user = await prisma.user.findFirst({
-          where: { id },
-          select: {
-            id: true,
-            username: true,
-            profileName: true,
-            profilePicture: true,
-            isPremium: true,
-            email: true,
-            password: false,
-          },
-        });
+				const user = await prisma.user.findFirst({
+					where: { id },
+					select: {
+						id: true,
+						username: true,
+						profileName: true,
+						profilePicture: true,
+						isPremium: true,
+						email: true,
+						password: false,
+					},
+				});
 
-        if (!user) {
-          return res.status(400).json({ error: "User not found" });
-        }
+				if (!user) {
+					return res.status(400).json({ error: "User not found" });
+				}
 
-        const newAccessToken = generateAccessToken(user);
+				const newAccessToken = generateAccessToken(user);
 
-        res.header("authorization", newAccessToken);
-        req.user = user;
-        next();
-      } catch (err) {
-        console.error("Error:", err);
-        return res.status(401).json({ error: "Invalid refresh token" });
-      }
-    } else {
-      console.error("Error:", err);
-      return res.status(401).json({ error: "Not authorized" });
-    }
-  }
+				res.header("authorization", newAccessToken);
+				req.user = user;
+				next();
+			} catch (err) {
+				console.error("Error:", err);
+				return res.status(401).json({ error: "Invalid refresh token" });
+			}
+		} else {
+			console.error("Error:", err);
+			return res.status(401).json({ error: "Not authorized" });
+		}
+	}
 };
